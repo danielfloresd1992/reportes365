@@ -22,7 +22,7 @@ export default defineConfig({
             include: ['url'],
             protocolImports: true
         }),
-        netlifyPlugin()
+        netlifyPlugin({ unstable_edge: true })
     ],
     build: {
         minify: 'esbuild',
@@ -37,5 +37,4 @@ export default defineConfig({
             }
         }
     }
-
 });
