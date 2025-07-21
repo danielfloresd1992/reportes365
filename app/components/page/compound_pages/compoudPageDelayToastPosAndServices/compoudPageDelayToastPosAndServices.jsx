@@ -344,7 +344,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                                                             <p style={{
                                                                 display: 'block',
                                                                 textAlign: 'end'
-                                                            }} className="font-medium text-gray-900 " >{entriesNameState.length > 1 ? (totalProcess().totalProcess - bodyState['take out'].totalProcess) : 0}</p>
+                                                            }} className="font-medium text-gray-900 " >{entriesNameState.length > 1 ? (bodyState['take out'] ? (totalProcess().totalProcess - bodyState['take out'].totalProcess) : totalProcess().totalProcess) : 0}</p>
                                                         </div>
                                                     </div>
 
