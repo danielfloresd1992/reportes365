@@ -210,7 +210,7 @@ export default memo(function ContentPreviewDocument() {
                                                     null
                                             }
                                             {
-                                                item.menuRef.useOnlyForTheReportingDocument ?
+                                                item?.menuRef?.useOnlyForTheReportingDocument ?
                                                     <div className={classIco} title={`Alerta hidrada en el reporte`}>
                                                         <img className='w-full h-full' src={icoDocument} alt='ico-aprobado' />
                                                     </div>

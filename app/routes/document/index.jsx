@@ -8,7 +8,7 @@ import ProtectedRoute from '../../components/ProtectedRoute';
 import CompleteLayaut from '../../components/layaut/Content';
 import ContentPage from '../../components/layaut/ContentPage';
 import ContentPreviewDocument from '../../components/aside/aside_preview_document.js/ContentPreviewDocument';
-import NavBarOption, { changueText } from '../../components/headerComponens/NasBarOption';
+import { changueText } from '../../components/headerComponens/NasBarOption';
 import AsideClonePage from '../../components/aside/aside_clone_page/Aside_Clone_Page';
 import { htmlToPng } from '../../lib/file/toPng';
 import { jsPDF } from 'jspdf';
@@ -70,35 +70,60 @@ export default function Document() {
 
 
 
-            hydrateDocumentWithJarvis(null, (dataArr, error) => {
-                console.log(dataArr);
-                const { arr } = processDataNovelty({ summaryData, noveltyPageData, delayToastPostAndServise, establishmentStore, dataArr });
-                arr.unshift(fronPageData);
-                const PromiseArr = [];
-                arr.forEach(page => {
-                    PromiseArr.push(addPageInDocument(documentDataResponse._id, page));
-                });
+            hydrateDocumentWithJarvis(null, async (dataArr, errorCall) => {
+                try {
 
+                    if (errorCall) throw 'Error al cargar las alertas en el documento';
 
-                Promise.all(PromiseArr)
-                    .then(responses => {
-                        const idArr = [];
-                        responses.forEach(response => {
-                            idArr.push(response.data.data._id)
-                        });
-                        const toSaveArrOrder = [...documentDataResponse.pages, ...idArr];
-                        setDataResponse({ ...documentDataResponse, pages: toSaveArrOrder });
-                        updatePage(toSaveArrOrder);
-                        changueText('Documento hidratado por Jarvis 🤖', 'springgreen');
-                    })
-                    .catch(error => {
-                        console.log(error);
-                        changueText('Error al hidratar el documento ❌', 'red');
+                    const { arr } = processDataNovelty({ summaryData, noveltyPageData, delayToastPostAndServise, establishmentStore, dataArr });
+                    arr.unshift(fronPageData);
+                    const PromiseArr = [];
+
+                    arr.forEach(page => {
+                        PromiseArr.push(addPageInDocument(documentDataResponse._id, page));
                     });
 
+                    const responses = await Promise.all(PromiseArr)
+
+                    const idArr = responses.map(r => r.data.data._id);
+                    const toSaveArrOrder = [...documentDataResponse.pages, ...idArr];
+
+                    // Paso 5: Actualizar estado
+                    setDataResponse({
+                        ...documentDataResponse,
+                        pages: toSaveArrOrder
+                    });
+
+                    updatePage(toSaveArrOrder);
+                    changueText('Documento hidratado por Jarvis 🤖', 'springgreen');
+
+                }
+                catch (error) {
+                    console.error(error);
+                    changueText('Documento en modo manual', 'red');
+                    const responseFront = await addPageInDocument(documentDataResponse._id, fronPageData);
+                    const responseSummary = await addPageInDocument(documentDataResponse._id, summaryData);
+                    const responses = await Promise.all([responseFront, responseSummary]);
+                    const idArr = responses.map(r => r.data.data._id);
+                    const toSaveArrOrder = [...documentDataResponse.pages, ...idArr];
+
+                    setDataResponse({
+                        ...documentDataResponse,
+                        pages: toSaveArrOrder
+                    });
+
+                    dispatch(modalConfig({
+                        open: true,
+                        title: 'Error crítico',
+                        description: 'Ha ocurrido un error inesperado al cargar las alertas en vivo, se han cargado las páginas de inicio para el modo manual',
+                        callback: null,
+                        type: 'error',
+                    }))
+                }
             });
         }
     }, [documentDataResponse, dataSessionState, , establishmentStore, keyRef]);
+
 
 
 
@@ -116,9 +141,10 @@ export default function Document() {
                 properties: 'imageToShare imageUrl validationResult menuEditedBy sharedByUser _id'
             })
                 .then(response => {
+                    const filteredWithoutMenu = response.data.filter(item => { if (item.menuRef) return item });
                     if (documentDataResponse.jarvisNewsHydration === false) {
-                        const dataNoveltyFilter = response.data.filter(items => items.menuRef.useOnlyForTheReportingDocument === true);
-                        callback(dataNoveltyFilter);
+                        const filteredForDocuments = filteredWithoutMenu.filter(items => items.menuRef.useOnlyForTheReportingDocument === true);
+                        callback(filteredForDocuments);
                     }
                 })
                 .catch(error => {
@@ -127,6 +153,9 @@ export default function Document() {
                 });
         }
     }, [documentDataResponse, establishmentStore]);
+
+
+
 
 
 
@@ -149,6 +178,8 @@ export default function Document() {
     const setDocumentProps = useCallback((dataFromRequest) => {
         setDataResponse(dataFromRequest);
     }, [documentDataResponse]);
+
+
 
 
 
@@ -179,6 +210,8 @@ export default function Document() {
                 }));
             });
     }, [documentDataResponse]);
+
+
 
 
 
