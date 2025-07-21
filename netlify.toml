@@ -1,11 +1,13 @@
 [build]
-  command = "npm run build" # O 'yarn build' si usas Yarn
-  publish = "build"
+  command = "npm run build" # O 'yarn build'
+  publish = "build/client"  # Ajusta esta ruta si es diferente en tu proyecto
 
 [functions]
   directory = "netlify/functions" # Directorio donde se generará la función serverless de Remix
 
+# --- Sección de Redirecciones (IMPORTANTE) ---
 [[redirects]]
-  from = "/*"
-  to = "/.netlify/functions/server"
-  status = 200
+  from = "/*"       # Captura todas las rutas entrantes
+  to = "/.netlify/functions/server" # Redirige a la función serverless de Remix
+  status = 200      # Devuelve un estado 200 (OK), indicando que la página se sirve dinámicamente
+  force = true      # Asegura que la redirección se aplique incluso s
