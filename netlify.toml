@@ -1,6 +1,6 @@
 [build]
   command = "npm run build" # O 'yarn build' si usas Yarn
-  publish = "public/build" # O "build/client" si tu configuración de Remix lo indica
+  publish = "build"
 
 [functions]
   directory = "netlify/functions" # Directorio donde se generará la función serverless de Remix
