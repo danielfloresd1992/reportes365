@@ -51,7 +51,6 @@ const styleCircle = {
 
 const styleTable = {
     borderRadius: '10px',
-    overflow: 'hidden',
     borderCollapse: 'separate',
     height: '100%',
     backgroundColor: 'transparent',
@@ -172,10 +171,6 @@ export default function Resume_document() {
     }, [dataSessionState, listEstablishmentsState, dataDocumentState])
 
 
-
-    {
-        console.log(dataDocumentState)
-    }
 
 
 

@@ -127,11 +127,11 @@ export default function CompoundPageNovelty({ menus, data, updateDataProp, style
             const newData = { ...bodyDataState };
             newData.body[noveltIndex] = newNovelty;
 
-            /*
+
             updateDataProp(newData, (data, error) => {
                 if (!error) setBodyDataState(newData);
             });
-        */
+
         }
         catch (error) {
             console.log(error);
@@ -240,7 +240,10 @@ export default function CompoundPageNovelty({ menus, data, updateDataProp, style
                                                                 styles={styles}
                                                                 layautDouble={true}
                                                                 setSrc={Array.isArray(data?.imageUrl) && data?.imageUrl[index] !== undefined && data?.imageUrl.length > 0 ? (data?.imageUrl[index] && data?.imageUrl[index].url ? tranUrlToLocal(data?.imageUrl[index].url) : null) : null}
-                                                                getFile={(file) => saveImg(file, data._id, index, !data?.imageUrl[index] ? menuSeletedState?.photos?.caption[index].es : null)}
+                                                                getFile={(file) => {
+                                                                    const dataNew = !data?.imageUrl[index] ? menuSeletedState?.photos?.caption[index].es : data?.imageUrl[index].caption;
+                                                                    saveImg(file, data._id, index, dataNew);
+                                                                }}
                                                                 arrowCordernate={true}
                                                                 setCoordinates={data?.coordinates && Array.isArray(data?.coordinates) ? data?.coordinates[index] : null}
                                                                 saveCordenate={coordinates => {
@@ -326,11 +329,8 @@ export default function CompoundPageNovelty({ menus, data, updateDataProp, style
                                                 styles={styles}
                                                 setSrc={Array.isArray(data?.imageUrl) && data?.imageUrl[index] !== undefined && data?.imageUrl.length > 0 ? (data?.imageUrl[index] && data?.imageUrl[index].url ? tranUrlToLocal(data?.imageUrl[index].url) : null) : null}
                                                 getFile={(file) => {
-                                                    console.log(data?.imageUrl[index]);
-                                                    console.log(menuSeletedState?.photos?.caption[index].es);
                                                     const dataNew = !data?.imageUrl[index] ? menuSeletedState?.photos?.caption[index].es : data?.imageUrl[index].caption;
-                                                    alert(dataNew)
-                                                    saveImg(file, data._id, index, dataNew)
+                                                    saveImg(file, data._id, index, dataNew);
                                                 }}
                                                 arrowCordernate={true}
                                                 setCoordinates={data.coordinates && Array.isArray(data?.coordinates) ? data?.coordinates[index] : null}

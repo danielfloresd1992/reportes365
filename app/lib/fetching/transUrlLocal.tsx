@@ -1,6 +1,7 @@
 
 export default function tranUrlToLocal(url: string) {
     try {
+        return url;
         if (!url) return null;
 
         if (url.indexOf('https://amazona365.ddns.net') < 0) return url;
