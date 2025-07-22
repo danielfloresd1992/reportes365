@@ -3,8 +3,6 @@ export default function tranUrlToLocal(url: string) {
     try {
         if (!url) return null;
 
-        return `https://72.68.60.254${url.split('https://amazona365.ddns.net')[1]}`;
-
         if (url.indexOf('https://amazona365.ddns.net') < 0) return url;
 
         let dns = '';
