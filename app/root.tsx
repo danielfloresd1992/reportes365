@@ -21,14 +21,12 @@ import "@fontsource/noto-sans/400-italic.css"; // Specify weight and style
 
 
 
-import "./tailwind.css";
-
-
-
+import stylesHref from "./tailwind.css?url";
 import ModalAlert from './components/modal/modalAlert';
 
 
 export const links: LinksFunction = () => [
+    { rel: "stylesheet", href: stylesHref },
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
     {
         rel: "preconnect",
