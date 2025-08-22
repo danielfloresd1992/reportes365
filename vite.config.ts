@@ -7,34 +7,34 @@ import { netlifyPlugin } from "@netlify/remix-adapter/plugin";
 
 export default defineConfig({
 
-    server: { host: '0.0.0.0' },
+  server: { host: '0.0.0.0', port: 5174 },
 
-    plugins: [
-        remix({
-            future: {
-                v3_fetcherPersist: true,
-                v3_relativeSplatPath: true,
-                v3_throwAbortReason: true,
-            },
-        }),
-        tsconfigPaths(),
-        nodePolyfills({
-            include: ['url'],
-            protocolImports: true
-        }),
-        netlifyPlugin({ unstable_edge: true })
-    ],
-    build: {
-        minify: 'esbuild',
-        chunkSizeWarningLimit: 2000,
-        rollupOptions: {
-            output: {
-                manualChunks(id) {
-                    if (id.includes('node_modules')) {
-                        return 'vendor'
-                    }
-                }
-            }
+  plugins: [
+    remix({
+      future: {
+        v3_fetcherPersist: true,
+        v3_relativeSplatPath: true,
+        v3_throwAbortReason: true,
+      },
+    }),
+    tsconfigPaths(),
+    nodePolyfills({
+      include: ['url'],
+      protocolImports: true
+    }),
+    netlifyPlugin({ unstable_edge: true })
+  ],
+  build: {
+    minify: 'esbuild',
+    chunkSizeWarningLimit: 2000,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return 'vendor'
+          }
         }
+      }
     }
+  }
 });
