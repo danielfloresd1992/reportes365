@@ -3,9 +3,9 @@ import { ServerToClientEvents, ClientToServerEvents, InterServerEvents, SocketDa
 
 
 let socket_ava_bot: Socket<ServerToClientEvents, ClientToServerEvents> | null = null;
+const conection: string = import.meta.env.VITE_SOCKET_AVA_URL;
 
-
-socket_ava_bot = io(import.meta.env.VITE_SOCKET_AVA_URL, {
+socket_ava_bot = io(conection, {
     secure: true,
     rejectUnauthorized: false,
 });

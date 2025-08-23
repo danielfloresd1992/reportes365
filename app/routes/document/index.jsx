@@ -280,7 +280,7 @@ export default function Document() {
                         addPagesForPreviewProp={addPagesForPreview}
                         deletePage={deletePage}
                         ref={refElement}
-                        nameDocument={`${documentDataResponse?.establishmentName} ${shiftToEs(documentDataResponse?.shift)} ${documentDataResponse?.date}.pdf`}
+                        nameDocument={`${documentDataResponse?.establishmentName} ${shiftToEs(documentDataResponse?.shift)} ${documentDataResponse?.date}`}
                     />
 
                     <ContentPreviewDocument />
