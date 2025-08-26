@@ -102,6 +102,7 @@ export default function ReturnPage({ idPage, establishment, configProp, menusPro
             updateDataProp={uddateBodyData}
             deletePage={deletePageProp}
             dataId={idPage}
+            dish={establishment?.dishes}
         />
     )
     if (sectionDataState?.type === 'touchPageData') return (
@@ -127,19 +128,7 @@ export default function ReturnPage({ idPage, establishment, configProp, menusPro
             typeDelay='clean'
         />
     )
-    if (sectionDataState?.type === 'services') return (
-        <TableTwoImage
-            data={sectionDataState}
-            styles={configProp?.style}
-            config={configProp}
-            key={sectionDataState._id}
-            deletePage={deletePageProp}
-            dataId={idPage}
-            indexPage={indexPage}
-            headerPadding='en recibir servicio de plato'
-        >
-        </TableTwoImage>
-    )
+
     if (sectionDataState?.type === 'blocked&novelty') return (
         <CompoundPageNovelty
             data={sectionDataState}

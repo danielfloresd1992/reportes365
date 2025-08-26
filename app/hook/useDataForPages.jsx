@@ -258,6 +258,11 @@ export default function useDataForPages() {
             delay: [],
             average: '00:00:00'
         };
+
+        delayToastPostAndServise.data.body.delayServices = {
+            header: ['Mesas', 'Toma de orden', 'Entrega ', 'Demora'],
+            delay: []
+        };
     }
 
 

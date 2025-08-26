@@ -96,7 +96,6 @@ export default function Document() {
 
                     updatePage(toSaveArrOrder);
                     changueText('Documento hidratado por Jarvis 🤖', 'springgreen');
-
                 }
                 catch (error) {
                     console.error(error);

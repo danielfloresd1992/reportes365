@@ -14,7 +14,7 @@ export function groupedItemsByCategory(dataArr) {
 
 export function processDataNovelty({ summaryData, noveltyPageData, delayToastPostAndServise, establishmentStore, dataArr }) {
 
-    console.log(dataArr);
+
 
     const groupedItems = dataArr.reduce((acc, item) => {
         const { category } = item.menuRef;
@@ -50,7 +50,6 @@ export function processDataNovelty({ summaryData, noveltyPageData, delayToastPos
         }, {});
 
 
-
         if (delay['Demora de primera atención']) {
 
             const delayBar = delay['Demora de primera atención'].filter(item => isNaN(Number(item.table)));
@@ -74,7 +73,7 @@ export function processDataNovelty({ summaryData, noveltyPageData, delayToastPos
 
 
 
-        if (delay['Demora en preparación de plato'] || delay['Demora en entrega de plato'] || delay['Demora en preparación de Plato fuerte']) {
+        if (delay['Demora en preparación de plato'] || delay['Demora en entrega de plato'] || delay['Demora en preparación de Plato fuerte'] || delay['Demora de servicio']) {
 
 
             delay['Demora en preparación de plato'] && delay['Demora en preparación de plato'].forEach((object, index) => { //demora de tablet convencional
@@ -90,6 +89,10 @@ export function processDataNovelty({ summaryData, noveltyPageData, delayToastPos
             delay['Demora en entrega de plato'] && delay['Demora en entrega de plato'].forEach((object, index) => { // tiempo que excede de listo en cocina a entrga de plato
                 delayToastPostAndServise.data.body.delayDeliveryDishWhenItIsReadyInKitchen.delay.push(object);
             });
+
+            if (delay['Demora de servicio']) {
+                delayToastPostAndServise.data.body.delayServices.delay = delay['Demora de servicio'];
+            }
 
             objectAll.push(delayToastPostAndServise);
         }
@@ -115,7 +118,7 @@ export function processDataNovelty({ summaryData, noveltyPageData, delayToastPos
 
             if (totalDelay.length > 0) {
                 summaryData.data.totalCountClearTable = totalDelay === 1 ? `${totalDelay.length} Mesa` : `${totalDelay.length} Mesas`;
-                console.log(delay['Demora de limpieza']);
+
                 objectAll.push({
                     type: 'delayClear',
                     name_establishment: establishmentStore?.name,

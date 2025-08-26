@@ -25,13 +25,12 @@ export default memo(function Cover({ establishment, seleted }) {
 
 
 
-
     return (
         <div className={`relative flex flex-col items-center gap-[.5rem] overflow-hidden${establishmentState?.config_report?.activation ? 'cursor-pointer card' : ' no-aviable'}`} onClick={handlerClick}>
             <div className={`w-[150px] h-[120px] border-[6px] border-solid border-gray-400 bg-white text-black flex items-center justify-center relative${establishmentState?.config_report?.activation ? '' : ' filter grayscale'}`}>
                 {
-                    establishmentState?.img ?
-                        <img className='absolute w-full h-full top-[0] left-[0]' src={arrayBufferToBase64(establishmentState?.img?.data?.data, 'image/png')} alt='logo-local' />
+                    establishmentState?.image ?
+                        <img className='absolute w-full h-full top-[0] left-[0]' src={establishmentState?.image} alt='logo-local' />
                         :
                         <div className='w-full h-full flex justify-center items-center bg-[#525b61]'>
                             <span className="loader"></span>

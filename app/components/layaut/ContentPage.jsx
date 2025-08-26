@@ -70,4 +70,5 @@ const ContentPage = forwardRef(({ establishmentProp, documentArr, documentArreDa
 });
 
 
+
 export default memo(ContentPage);

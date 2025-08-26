@@ -27,9 +27,13 @@ import icoAlert from '../../../../../public/ico/ico_page_metric/icons8-alerta-96
 import Image from '../../../image_for_page/image';
 import alertIco from '../../../../../public/ico/icons8-alarma-50.png';
 import foodIco from '../../../../../public/ico/icons8-comida-64.png';
+import Services from './assets/Services';
 
 
-export default memo(function CompoundPageDelayToastPosAndServices({ styles, config, data: dataProp, updateDataProp, deletePage, dataId }) {
+
+
+
+export default memo(function CompoundPageDelayToastPosAndServices({ styles, config, data: dataProp, dish, updateDataProp, deletePage, dataId }) {
 
 
 
@@ -160,14 +164,37 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
         }
 
 
-
-
         updateDataProp(newBody, (data, error) => {
-            console.log(error);
             setBodyState(data);
         });
 
     }, [dataProp, bodyState]);
+
+
+
+
+    const editCellService = useCallback((id, dataUpdate) => {
+        const newBody = { ...dataProp.data };
+        const findIndex = newBody.body.delayServices.delay.findIndex(delay => delay._id === id);
+        console.log(newBody.body.delayServices.delay);
+        newBody.body.delayServices.delay[findIndex] = dataUpdate;
+        updateDataProp(newBody, (data, error) => {
+            setBodyState(data);
+        });
+    }, [dataProp, bodyState]);
+
+
+
+    const deleteServiceInTable = useCallback((id) => {
+        if (!dataProp) return null;
+        const newBody = { ...dataProp.data };
+        newBody.body.delayServices.delay = newBody.body.delayServices.delay.filter(delay => delay._id !== id);
+        updateDataProp(newBody, (data, error) => {
+
+            setBodyState(data);
+        });
+    }, [dataProp]);
+
 
 
 
@@ -316,7 +343,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
             </HeaderPage>
 
 
-            {
+            {           /////////////////  TABLE METRIC
                 config?.propMetricTableInToastPos ?
                     <>
                         <LayautNovelty
@@ -623,81 +650,8 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
             }
 
-            {
-                Object.entries(bodyState).map(([key, value]) => (
-                    entriesNameState.findIndex(foodName => foodName === key) > -1 && value.delay.length > 0 ?
-                        <>
-                            {
-                                chunkArray(order(pipeObjectTime(value.delay)), 10).map(arr => (
-                                    arr.length === 0 ?
-                                        null
-                                        :
-                                        <LayautNovelty
-                                            namePage={`Demora en preparación de ${key}`}
-                                            key={key}
-                                            styles={styles}
-                                        >
-                                            <div
-                                                className='w-[95%] h-[95%] p-[1rem] flex flex-col items-center justify-between gap-[1rem]'
-                                                onClick={() => pipeObjectTime(value.delay)}
 
-                                            >
-                                                <TableFourCol
-                                                    header={dataProp?.data?.header ?? []}
-                                                    body={arr}
-                                                    addRowProp={() => addRowDelay(key)}
-                                                    editCellProp={(index, data) => editCell(data._id, data, key)}
-                                                    deleteRowProp={(index, delay) => deleteDelayInTable(delay._id, key)}
-                                                    styles={styles}
-                                                />
-                                                {
-                                                    returnImg(order(value.delay), key)
-                                                }
-                                            </div>
-                                        </LayautNovelty>
-                                ))
-                            }
-
-
-                            {
-                                value.delay.length > 3 ?
-                                    chunkArr(order(value.delay)).map(arr => (
-                                        <LayautNovelty
-                                            namePage={`Demora en preparación de ${key}`}
-                                            key={key}
-                                            styles={styles}
-                                            children={{
-                                                callbackDelete: () => { },
-                                                deleteOnSwipe: true
-                                            }}
-                                        >
-                                            <div className='w-full h-full flex justify-center items-center flex-wrap gap-[.5rem]'>
-                                                {
-                                                    arr.sort((a, b) => TimeOperator.changueTimeMiliSecond(TimeOperator.calculateTime(b.startTime || b?.timePeriod?.init, b.endTime || b?.timePeriod?.end)) - TimeOperator.changueTimeMiliSecond(TimeOperator.calculateTime(a.startTime || a?.timePeriod?.init, a.endTime || a?.timePeriod?.end))).map((image, index) => (
-                                                        <Image
-                                                            style={{
-                                                                width: '48%',
-                                                                height: '48%'
-                                                            }}
-                                                            setSrc={tranUrlToLocal(image.imageToShare)}
-                                                            caption={`Mesa: ${image.table}`}
-                                                            getFile={data => getNewUrlImg(data, { delay: key, data: image, id: image._id, index: index })}
-                                                            boubleClickEvent={() => findNovelty(image._id)}
-                                                        />
-                                                    ))
-                                                }
-                                            </div>
-                                        </LayautNovelty>
-                                    ))
-                                    :
-                                    null
-                            }
-                        </>
-                        :
-                        null
-                ))
-            }
-            {
+            {           //////////  DELAY DELIVERY IN READY KICHEN
                 Array.isArray(bodyState?.delayDeliveryDishWhenItIsReadyInKitchen?.delay) && bodyState?.delayDeliveryDishWhenItIsReadyInKitchen?.delay?.length > 0 ?
                     bodyState?.delayDeliveryDishWhenItIsReadyInKitchen && bodyState?.delayDeliveryDishWhenItIsReadyInKitchen?.delay.map((delayDelivery, indexDelay) => (
                         <LayautNovelty
@@ -778,6 +732,23 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                     :
                     null
             }
+
+            {
+                Array.isArray(bodyState?.delayServices?.delay) && bodyState?.delayServices?.delay?.length > 0 && dish.map(dishItem => {
+
+                    const delayArr = bodyState?.delayServices?.delay.filter(delay => delay.nameDish === dishItem.nameDishe);
+
+                    if (delayArr.length === 0) return null;
+
+
+                    return (
+                        <Services
+                            {...{ deleteServiceInTable, editCellService, dishItem, delayArr, styles }}
+                        />
+                    );
+                })
+            }
+
             <FooterPage eventClick={() => console.log(bodyState)} />
         </LayautPages>
     );
