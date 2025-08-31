@@ -47,19 +47,21 @@ export default memo(function ContentPreviewDocument() {
     }, [queryStore]);
 
 
+
     const textParcing = (text) => {
         if (!text) return null;
         const arrText = text.split('\n')
         const resultText = arrText.map(line => {
 
-            if (line.indexOf('*') > -1 && line.indexOf('_') < 0) return <b>{line.replaceAll('*', '')}</b>
+            if (line.indexOf('*') > -1 && line.indexOf('_') < 0) return <b key={line}>{line.replaceAll('*', '')}</b>
             else if (line.indexOf('*') > -1 && line.indexOf('_') > -1) {
-                return <b><i>{line.replaceAll('*', '').replaceAll('_', '')}</i></b>
+                return <b key={line}><i>{line.replaceAll('*', '').replaceAll('_', '')}</i></b>
             }
-            else return <p>{line}</p>
+            else return <p key={line}>{line}</p>
         });
         return resultText.map(line => (line));
     };
+
 
 
 

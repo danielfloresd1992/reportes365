@@ -1,13 +1,43 @@
+import { useState, useCallback, useEffect } from 'react';
 import TimeOperator from '../../../../../lib/time';
 import LayautNovelty from '../../../../layaut/LayautPage';
 import TableFourCol from '../../../../table/table';
 
 
 
-export default function Services({ deleteServiceInTable, editCellService, dishItem, delayArr, styles }) {
+
+
+export default function Services({ delay_data, dishItem, styles }) {
+
 
 
     const titleForTable = `Mesas con demora superior a ${TimeOperator.timePeriod(dishItem?.timeLimit?.day ?? '00:00:00')} para recibir servicio de ${dishItem.nameDishe}`;
+    const [dataState, setDataState] = useState(null);
+
+
+
+    useEffect(() => {
+        setDataState(delay_data);
+    }, [delay_data]);
+
+
+
+
+    const deleteServiceInTable = useCallback((id) => {
+        if (!dataState) return null;
+        const newBody = { ...dataState.delay };
+        newBody.delay = newBody.delay.filter(delay => delay._id !== id);
+        updateDataProp(newBody, (data, error) => {
+
+            setDataState(data);
+        });
+    }, [delay_data]);
+
+
+
+    console.log(delay_data);
+
+    return null;
 
 
     return (
@@ -24,7 +54,7 @@ export default function Services({ deleteServiceInTable, editCellService, dishIt
             >
                 <TableFourCol
                     header={['Mesas', 'Toma de orden', `Entrega de ${dishItem.nameDishe}`, 'Demora']}
-                    body={delayArr}
+                    body={dataState.delay}
                     addRowProp={() => {/*addRowDelay(key)*/ }}
                     editCellProp={(index, data) => { editCellService(data._id, data) }}
                     deleteRowProp={(index, delay) => { deleteServiceInTable(delay._id) }}

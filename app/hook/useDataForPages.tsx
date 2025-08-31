@@ -3,25 +3,27 @@ import { useContext } from 'react';
 import { myUserContext } from '../context/sessionContext';
 import { useSelector } from 'react-redux';
 
+import { FronPageData, SummaryData, TouchPageData, NoveltyPageData, DelayOcuppies, DelayToastPostAndServise } from '../type/TYPES_DataForPages';
+
 
 
 export default function useDataForPages() {
 
 
-    const establishmentStore = useSelector(store => store.establishmentDocument);
+    const establishmentStore: any = useSelector((store: any) => store.establishmentDocument);
     const sessionContext = useContext(myUserContext);
 
-    const { dataSessionState } = sessionContext;
+    const { dataSessionState }: any = sessionContext;
     const documentDataCookie = dataSessionState?.dataSession?.activity;
 
 
-    function generate_random(min, max) {
+    function generate_random(min: number, max: number): number {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
 
 
-    const fronPageData = {
+    const fronPageData: FronPageData = {
         type: 'front',
         name_establishment: establishmentStore?.name,
         blocked: true,
@@ -34,7 +36,7 @@ export default function useDataForPages() {
 
 
 
-    const summaryData = {
+    const summaryData: SummaryData = {
         type: 'summary',
         name_establishment: establishmentStore?.name,
         unique: true,
@@ -44,7 +46,7 @@ export default function useDataForPages() {
                 result: {
                     firt: {
                         key: 'Rotaciones evaluadas',
-                        value: '0'
+                        value: 0
                     },
                     second: {
                         key: 'Promedio de tiempo para ser atendidas',
@@ -93,7 +95,7 @@ export default function useDataForPages() {
 
 
 
-    const touchPageData = {
+    const touchPageData: TouchPageData = {
         numberPage: 0,
         type: 'touchPageData',
         name_establishment: establishmentStore?.name,
@@ -149,7 +151,7 @@ export default function useDataForPages() {
 
 
 
-    const noveltyPageData = {
+    const noveltyPageData: NoveltyPageData = {
         type: 'blocked&novelty',
         name_establishment: establishmentStore?.name,
         blocked: true,
@@ -162,7 +164,7 @@ export default function useDataForPages() {
 
 
 
-    const delay1attention = {
+    const delay1attention: DelayOcuppies = {
         type: 'delay1ra',
         name_establishment: establishmentStore?.name,
         unique: true,
@@ -189,7 +191,7 @@ export default function useDataForPages() {
 
 
 
-    const delayClean = {
+    const delayClean: DelayOcuppies = {
         type: 'delayClear',
         name_establishment: establishmentStore?.name,
         unique: true,
@@ -215,20 +217,42 @@ export default function useDataForPages() {
     };
 
 
-    const delayToastPostAndServise = {
+
+    const delayToastPostAndServise: DelayToastPostAndServise = {
         type: 'delayToastPostAndServise',
         name_establishment: establishmentStore?.name,
         unique: true,
         data: {
+
+            // LEGACE
             header: ['Mesas', 'Toma de orden', 'Listo en tablet', 'Demora en preparación'],
-            body: {}
+            body: {
+
+            },
+            // ///////
+
+
+            summary: {},
+            delayToastPost: {
+                header: ['Mesas', 'Toma de orden', 'Listo en tablet', 'Tiempo total'],
+                delay: []
+            },
+            delayDeliveryDishWhenItIsReadyInKitchen: {
+                delay: []
+            },
+            delayServices: {
+                header: ['Mesas', 'Toma de orden', 'Entrega ', 'Demora'],
+                delay: []
+            }
         }
-    }
+    };
 
 
+
+    /////////////////////////////////////////  LEGACE  ///////////////////////////////////////////////////////////////////
     if (establishmentStore) {
         if (establishmentStore.dishes.length > 0) {
-            establishmentStore.dishes.forEach(dish => {
+            establishmentStore.dishes.forEach((dish: any) => {
                 delayToastPostAndServise.data.body[dish.nameDishe] = {
                     delay: [],
                     average: '00:00:00',
@@ -237,34 +261,36 @@ export default function useDataForPages() {
             });
         }
         else {
-            delayToastPostAndServise.data.body[establishmentStore.dishMenu.appetizer] = {
+
+            if (establishmentStore) delayToastPostAndServise.data.body[establishmentStore.dishMenu.appetizer] = {
                 delay: [],
                 average: '00:00:00',
                 totalProcess: 0
             };
-            delayToastPostAndServise.data.body[establishmentStore.dishMenu.mainDish] = {
+            if (establishmentStore) delayToastPostAndServise.data.body[establishmentStore.dishMenu.mainDish] = {
                 delay: [],
                 average: '00:00:00',
                 totalProcess: 0
             };
-            delayToastPostAndServise.data.body[establishmentStore.dishMenu.dessert] = {
+            if (establishmentStore) delayToastPostAndServise.data.body[establishmentStore.dishMenu.dessert] = {
                 delay: [],
                 average: '00:00:00',
                 totalProcess: 0
             };
         }
 
+
+
         delayToastPostAndServise.data.body.delayDeliveryDishWhenItIsReadyInKitchen = {
             delay: [],
             average: '00:00:00'
         };
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        delayToastPostAndServise.data.body.delayServices = {
-            header: ['Mesas', 'Toma de orden', 'Entrega ', 'Demora'],
-            delay: []
-        };
+
+
+
     }
-
 
 
 

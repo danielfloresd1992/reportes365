@@ -1,0 +1,496 @@
+import { v4 as uuidv4 } from 'uuid';
+import { useState, useEffect, useRef, memo, useCallback } from 'react';
+
+import LayautNovelty from '../../../../layaut/LayautPage';
+import TabletLayaut from '../../../../table/table_layaut';
+import TableFourCol from '../../../../table/table';
+
+
+
+
+export default function Legacy({
+    bodyState,
+    order,
+    chunkArr,
+    returnImg,
+    deleteDelayInTable,
+    dishItem
+}) {
+
+
+
+    console.log(bodyState);
+
+
+    return null;
+
+
+
+    return (
+        <>
+
+            {
+                config?.propMetricTableInToastPos ?
+                    <>
+                        <LayautNovelty
+                            namePage='Resumen general de métricas'
+                            styles={styles}
+                        >
+                            {
+                                entriesNameState.length > 2 && entriesNameState.length < 5 ?
+
+                                    <div className="w-full h-full">
+                                        <div className="w-full h-full">
+                                            <div className='w-full h-[50%] flex direction-row  justify-around'>
+                                                <div className="w-[48%] bg-white rounded-lg shadow-sm border border-gray p-[.5rem]">
+                                                    <div className='w-full flex flex-row gap-[.5rem] text-lg font-semibold text-gray-800 border-b border-gray-200 pb-[.5rem] mb-[.5rem]'>
+                                                        <img className='w-[25px]' src={icoGrafic} alt='ico-grafuc' />
+                                                        <h2 className="w-full">Resumen General</h2>
+                                                    </div>
+
+
+                                                    <div className="flex justify-between py-[.1rem] border-b border-gray-100 monotext">
+                                                        <div className='w-[50%]'>
+                                                            <p className="w-full text-gray-600">Procesos evaluados</p>
+                                                        </div>
+                                                        <div className='w-[50%]'>
+                                                            <p style={{
+                                                                display: 'block',
+                                                                textAlign: 'end'
+                                                            }} className="font-medium text-gray-900 " >{entriesNameState.length > 1 ? (bodyState['take out'] ? (totalProcess().totalProcess - bodyState['take out'].totalProcess) : totalProcess().totalProcess) : 0}</p>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div className="flex justify-between py-[.1rem] border-b border-gray-100 text-green-600 monotext">
+                                                        <div className='w-[50%]'>
+                                                            <p style={{
+                                                                width: '100%',
+                                                                display: 'block',
+                                                                textAlign: 'start'
+                                                            }} className='w-full'>Demoras preparación</p>
+                                                        </div>
+                                                        <div className='w-[50%]'>
+                                                            <p style={{
+                                                                display: 'block',
+                                                                textAlign: 'end'
+                                                            }} className="w-full font-medium">{entriesNameState.length > 1 ? totalProcess().totalDelayToasd : 0}</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="flex justify-between py-[.1rem] text-green-600 monotext">
+                                                        <div className='w-[50%]'>
+                                                            <p style={{
+                                                                display: 'block',
+                                                                textAlign: 'start'
+                                                            }} className='w-full'>Demoras en entrega</p>
+                                                        </div>
+                                                        <div className='w-[50%]'>
+                                                            <p style={{
+                                                                display: 'block',
+                                                                textAlign: 'end'
+                                                            }} className="font-medium">{bodyState?.delayDeliveryDishWhenItIsReadyInKitchen?.delay && bodyState?.delayDeliveryDishWhenItIsReadyInKitchen?.delay?.length || 0}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div className="w-[48%] bg-white rounded-lg shadow-sm border border-gray p-[.5rem]">
+                                                    <div className='flex flex-row gap-[.5rem] text-lg font-semibold text-gray-800 border-b border-gray-200 pb-[.5rem] mb-[.5rem]'>
+                                                        <img className='w-[25px] h-[25px]' src={icoReloj} alt='ico-grafuc' />
+                                                        <h2>Tiempos Promedio</h2>
+                                                    </div>
+
+                                                    {
+                                                        entriesNameState.map((entry, index) => (
+                                                            <div className="flex justify-between py-[.1rem] border-b border-gray-100 monotext" key={entry}>
+                                                                <div>
+                                                                    <p className="text-gray-600">{entry}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <p
+                                                                        className="monotext text-gray-900"
+                                                                        contentEditable
+                                                                        onBlur={e => {
+                                                                            const newBody = { ...dataProp.data };
+                                                                            newBody.body[entry].average = e.target.textContent;
+                                                                            updateDataProp(newBody, (data, error) => {
+                                                                                setBodyState(data);
+                                                                            });
+                                                                        }}
+                                                                    >{bodyState[entry] && bodyState[entry].average}</p>
+                                                                </div>
+
+                                                            </div>
+                                                        ))
+                                                    }
+                                                </div>
+                                            </div>
+
+
+                                            <div className='w-full h-[50%] flex direction-row justify-center justify-around'>
+                                                <div className="w-[48%] bg-white rounded-lg shadow-sm border border-gray p-[.5rem]">
+                                                    <div className='flex flex-row gap-[.5rem] text-lg font-semibold text-gray-800 border-b border-gray-200 pb-[.5rem] mb-[.5rem]'>
+                                                        <img className='w-[25px] h-[25px]' src={icoProcess} alt='ico-grafuc' />
+                                                        <h2>Procesos por Categoría</h2>
+                                                    </div>
+
+                                                    {
+                                                        entriesNameState.map((entry, index) => (
+                                                            <div className='flex justify-between py-[.1rem] border-b border-gray-100 monotext' key={entry}>
+                                                                <div>
+                                                                    <p className='text-gray-600'>{entry}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <p className='font-medium text-gray-900 ' contentEditable onBlur={e => {
+                                                                        const newBody = { ...dataProp.data };
+                                                                        newBody.body[entry].totalProcess = Number(e.target.textContent);
+                                                                        updateDataProp(newBody, (data, error) => {
+                                                                            setBodyState(data);
+                                                                        });
+                                                                    }}
+                                                                    >{bodyState[entry] && bodyState[entry].totalProcess}</p>
+                                                                </div>
+
+                                                            </div>
+                                                        ))
+                                                    }
+                                                </div>
+
+
+                                                <div className="w-[48%] bg-white rounded-lg shadow-sm border border-gray p-[.5rem]">
+                                                    <div className='flex flex-row gap-[.5rem] text-lg font-semibold text-gray-800 border-b border-gray-200 pb-[.5rem] mb-[.5rem]'>
+                                                        <img className='w-[25px] h-[25px]' src={icoAlert} alt='ico-grafuc' />
+                                                        <h2>Demoras por categorias</h2>
+                                                    </div>
+                                                    <div className="bg-green-50 rounded-md p-3 mb-4">
+                                                        {
+                                                            entriesNameState.map((entry, index) => (
+                                                                <div className="flex justify-between py-[.1rem] border-b border-gray-100 monotext" key={entry}>
+                                                                    <div>
+                                                                        <p className="text-gray-600">{entry}</p>
+                                                                    </div>
+                                                                    <div>
+                                                                        <p className="font-medium text-green-600">
+                                                                            {
+                                                                                bodyState[entry] && bodyState[entry].delay.length
+                                                                            }
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            ))
+                                                        }
+                                                    </div>
+                                                    <div className="flex justify-between py-[.1rem] text-green ">
+                                                        <div>
+                                                            <span className="font-medium">Total superaciones</span>
+                                                        </div>
+                                                        <div>
+                                                            <span className="font-medium monotext">{totalProcess().totalDelayToasd}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                    :
+
+                                    <div className='w-full h-full'>
+                                        {
+                                            console.log(styles)
+                                        }
+                                        <TabletLayaut>
+                                            <thead>
+                                                <tr style={{
+                                                    backgroundColor: styles?.bgTextBox ?? '#ffffff',
+                                                    color: styles?.colorTextBox ?? '#0000000',
+
+                                                }}>
+                                                    <th className={styleCellBorder} style={{ padding: '.5rem 0rem' }}>
+                                                        <div className='flex justify-center items-center gap-[.3rem]'>
+                                                            <img src={foodIco} alt='ico-time' className='w-[20px] h-[20px]' />
+                                                            <p>Categoría</p>
+                                                        </div>
+                                                    </th>
+
+                                                    <th className={styleCellBorder}>
+                                                        <div className='flex justify-center items-center gap-[.3rem]'>
+                                                            <img src={icoReloj} alt='ico-time' className='w-[20px] h-[20px]' />
+                                                            <p>Tiempo promedio</p>
+                                                        </div>
+                                                    </th>
+
+                                                    <th className={styleCellBorder}>
+                                                        <div className='flex justify-center items-center gap-[.3rem]'>
+                                                            <img src={icoProcess} alt='ico-time' className='w-[20px] h-[20px]' />
+                                                            <p>Procesos registrado</p>
+                                                        </div>
+                                                    </th>
+
+                                                    <th className={styleCellBorder}>
+                                                        <div className='flex justify-center items-center gap-[.3rem]'>
+                                                            <img src={alertIco} alt='ico-time' className='w-[20px] h-[20px]' />
+                                                            <p>Demoras</p>
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {
+                                                    entriesNameState.map(entrie => (
+                                                        <tr key={entrie}>
+                                                            <td className={styleCellBorder}> {entrie} </td>
+                                                            <td className={styleCellBorder}>
+                                                                <p
+                                                                    contentEditable
+                                                                    onBlur={e => {
+                                                                        const newBody = { ...dataProp.data };
+                                                                        newBody.body[entrie].average = e.target.textContent;
+                                                                        updateDataProp(newBody, (data, error) => {
+                                                                            setBodyState(data);
+                                                                        });
+                                                                    }}
+                                                                >{bodyState[entrie] && bodyState[entrie].average}</p>
+                                                            </td>
+
+
+                                                            <td className={styleCellBorder}>
+                                                                <p contentEditable onBlur={e => {
+                                                                    const newBody = { ...dataProp.data };
+                                                                    newBody.body[entrie].totalProcess = Number(e.target.textContent);
+                                                                    updateDataProp(newBody, (data, error) => {
+                                                                        setBodyState(data);
+                                                                    });
+                                                                }}
+                                                                >{bodyState[entrie] && bodyState[entrie].totalProcess}</p>
+                                                            </td>
+
+
+                                                            <td className={styleCellBorder}>{bodyState[entrie] && bodyState[entrie].delay.length}</td>
+                                                        </tr>
+                                                    ))
+                                                }
+                                                <tr>
+                                                    <td colSpan={3} className={styleCellBorder}
+                                                        style={{
+                                                            backgroundColor: '#ddd'
+                                                        }}
+                                                    >Total de procesos evaluados </td>
+
+                                                    <td className={styleCellBorder}
+                                                        style={{
+                                                            fontWeight: '700'
+                                                        }}
+                                                    >
+                                                        {totalProcess().totalProcess}
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td
+                                                        colSpan={3}
+                                                        className={styleCellBorder}
+                                                        style={{
+                                                            backgroundColor: '#ddd'
+                                                        }}
+                                                    >Total de demoras en preparación </td>
+                                                    <td
+                                                        className={styleCellBorder}
+                                                        style={{
+                                                            color: totalProcess().totalDelayToasd > 1 ? 'red' : '#000000',
+                                                            fontWeight: '700'
+                                                        }}
+
+                                                    >{totalProcess().totalDelayToasd}</td>
+                                                </tr>
+
+
+                                                <tr>
+                                                    <td
+                                                        colSpan={3}
+                                                        className={styleCellBorder}
+                                                        style={{
+                                                            backgroundColor: '#ddd'
+                                                        }}
+                                                    > Total de demoras en entrega de plato </td>
+                                                    <td className={styleCellBorder}
+                                                        style={{
+                                                            fontWeight: '700'
+                                                        }}
+                                                    >{bodyState?.delayDeliveryDishWhenItIsReadyInKitchen?.delay && bodyState?.delayDeliveryDishWhenItIsReadyInKitchen?.delay?.length || 0}</td>
+                                                </tr>
+                                            </tbody>
+                                        </TabletLayaut>
+                                    </div>
+                            }
+
+                        </LayautNovelty>
+                    </>
+                    :
+                    <div className='w-full'>
+
+                    </div>
+
+
+            }
+
+            {
+                Object.entries(bodyState).map(([key, value]) => (
+                    entriesNameState.findIndex(foodName => foodName === key) > -1 && value.delay.length > 0 ?
+                        <>
+                            {
+                                chunkArray(order(pipeObjectTime(value.delay)), 10).map(arr => (
+                                    arr.length === 0 ?
+                                        null
+                                        :
+                                        <LayautNovelty
+                                            namePage={`Demora en preparación de ${key}`}
+                                            key={key}
+                                            styles={styles}
+                                        >
+                                            <div
+                                                className='w-[95%] h-[95%] p-[1rem] flex flex-col items-center justify-between gap-[1rem]'
+                                                onClick={() => pipeObjectTime(value.delay)}
+
+                                            >
+                                                <TableFourCol
+                                                    header={dataProp?.data?.header ?? []}
+                                                    body={arr}
+                                                    addRowProp={() => addRowDelay(key)}
+                                                    editCellProp={(index, data) => editCell(data._id, data, key)}
+                                                    deleteRowProp={(index, delay) => deleteDelayInTable(delay._id, key)}
+                                                    styles={styles}
+                                                />
+                                                {
+                                                    returnImg(order(value.delay), key)
+                                                }
+                                            </div>
+                                        </LayautNovelty>
+                                ))
+                            }
+
+
+                            {
+                                value.delay.length > 3 ?
+                                    chunkArr(order(value.delay)).map(arr => (
+                                        <LayautNovelty
+                                            namePage={`Demora en preparación de ${key}`}
+                                            key={key}
+                                            styles={styles}
+                                            children={{
+                                                callbackDelete: () => { },
+                                                deleteOnSwipe: true
+                                            }}
+                                        >
+                                            <div className='w-full h-full flex justify-center items-center flex-wrap gap-[.5rem]'>
+                                                {
+                                                    arr.sort((a, b) => TimeOperator.changueTimeMiliSecond(TimeOperator.calculateTime(b.startTime || b?.timePeriod?.init, b.endTime || b?.timePeriod?.end)) - TimeOperator.changueTimeMiliSecond(TimeOperator.calculateTime(a.startTime || a?.timePeriod?.init, a.endTime || a?.timePeriod?.end))).map((image, index) => (
+                                                        <Image
+                                                            style={{
+                                                                width: '48%',
+                                                                height: '48%'
+                                                            }}
+                                                            setSrc={tranUrlToLocal(image.imageToShare)}
+                                                            caption={`Mesa: ${image.table}`}
+                                                            getFile={data => getNewUrlImg(data, { delay: key, data: image, id: image._id, index: index })}
+                                                            boubleClickEvent={() => findNovelty(image._id)}
+                                                        />
+                                                    ))
+                                                }
+                                            </div>
+                                        </LayautNovelty>
+                                    ))
+                                    :
+                                    null
+                            }
+                        </>
+                        :
+                        null
+                ))
+            }
+            {
+                Array.isArray(bodyState?.delayDeliveryDishWhenItIsReadyInKitchen?.delay) && bodyState?.delayDeliveryDishWhenItIsReadyInKitchen?.delay?.length > 0 ?
+                    bodyState?.delayDeliveryDishWhenItIsReadyInKitchen && bodyState?.delayDeliveryDishWhenItIsReadyInKitchen?.delay.map((delayDelivery, indexDelay) => (
+                        <LayautNovelty
+                            onSwipeRight={{
+                                callbackDelete: () => {
+                                    deleteDelayInTable(delayDelivery._id, 'delayDeliveryDishWhenItIsReadyInKitchen');
+                                },
+                                deleteOnSwipe: true
+                            }}
+                            styles={styles}
+                            namePage=''
+                            key={delayDelivery._id}
+                            boubleClickEvent={() => findNovelty(delayDelivery._id)}
+                        >
+                            <div className='w-full h-full flex flex-wrap item-center justify-center gap-[.5rem]' onClick={() => console.log(delayDelivery)}>
+                                <div className='w-full flex justify-center'>
+                                    <div className='w-[70%]'>
+                                        <Title styles={styles}>
+
+                                            <p style={{ color: styles?.colorTextBox ?? '#000000' }}>Demora en entrega de {delayDelivery.nameDish ?? 'plato'} - mesa:
+                                                <input
+                                                    className='unstyledInput w-[20px]'
+                                                    style={{ width: '30px' }}
+                                                    type='text'
+                                                    onChange={e => {
+                                                        editCell(delayDelivery._id, { table: Number(e.target.value) }, 'delayDeliveryDishWhenItIsReadyInKitchen')
+                                                    }}
+                                                    value={delayDelivery.table ?? 'N/A'}
+
+                                                />
+                                            </p>
+                                        </Title>
+                                    </div>
+                                </div>
+                                {
+                                    delayDelivery.imageUrl.map((imgObject, indexImage) => (
+                                        <Image
+                                            key={imgObject._id}
+                                            caption={imgObject.caption}
+                                            styles={styles}
+                                            setSrc={tranUrlToLocal(imgObject.url)}
+                                            title={
+                                                delayDelivery.timePeriod ? (indexImage === 0 ? delayDelivery.timePeriod.tomaOrden : (indexImage === 1 ? delayDelivery.timePeriod.listoCocina : ((indexImage === 2 ? delayDelivery.timePeriod.listoTablet : delayDelivery.timePeriod.entregaPlato)))) : ''
+                                            }
+                                            getFile={data => getNewUrlImg(data, { delay: 'delayDeliveryDishWhenItIsReadyInKitchen', data: delayDelivery, id: delayDelivery._id, index: indexImage })}
+                                            arrowCordernate={true}
+                                            setCoordinates={imgObject?.coordinates ? imgObject.coordinates : null}
+                                            saveCordenate={data => {
+                                                const newData = { imageUrl: [...delayDelivery.imageUrl] }
+                                                newData.imageUrl[indexImage].coordinates = data;
+                                                editCell(delayDelivery._id, newData, 'delayDeliveryDishWhenItIsReadyInKitchen');
+                                            }}
+                                            boubleClickEvent={() => findNovelty(delayDelivery._id)}
+                                        />
+                                    ))
+                                }
+                                <div className='w-full flex justify-center'>
+                                    <div className='w-[50%]'>
+                                        <Title styles={styles}>
+                                            <p style={{ color: styles?.colorTextBox ?? '#000000' }}>Duración:
+                                                <input
+                                                    className='unstyledInput'
+                                                    style={{ width: '75px' }}
+                                                    type='text'
+                                                    onChange={e => {
+                                                        editCell(delayDelivery._id, { timePeriod: { ...delayDelivery.timePeriod, timeTotal: e.target.value } }, 'delayDeliveryDishWhenItIsReadyInKitchen');
+                                                    }}
+                                                    value={`${delayDelivery?.timePeriod?.timeTotal ?? TimeOperator.calculateTime(delayDelivery.timePeriod.listoCocina, delayDelivery.timePeriod.entregaPlato)}`}
+                                                />
+                                            </p>
+                                        </Title>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </LayautNovelty>
+                    ))
+                    :
+                    null
+            }
+        </>
+    );
+}

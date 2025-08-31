@@ -15,6 +15,7 @@ import PushNotificatioBox from '../app/components/notifications/push_norificatio
 import PreViewMultimedia from './components/preview_multimedia/MultimediaContent';
 import useDisableZoom from './hook/useDisableZoom';
 
+
 import "@fontsource/noto-sans"; // Defaults to weight 400
 import "@fontsource/noto-sans/400.css"; // Specify weight
 import "@fontsource/noto-sans/400-italic.css"; // Specify weight and style
@@ -23,6 +24,7 @@ import "@fontsource/noto-sans/400-italic.css"; // Specify weight and style
 
 import stylesHref from "./tailwind.css?url";
 import ModalAlert from './components/modal/modalAlert';
+import { useDOMProtector } from './hook/DOMProtector'
 
 
 export const links: LinksFunction = () => [
@@ -40,7 +42,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 
     useDisableZoom();
-
+    //  useDOMProtector();
 
 
     return (

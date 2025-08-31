@@ -8,7 +8,7 @@
     "**/.client/**/*.tsx",
     "app/components/notifications/push_norifications/box_notification.jsx",
     "app/store/store.ts",
-    "app/hook/useDataForPages.jsx",
+    "app/hook/useDataForPages.tsx",
     "app/components/inputs/Note_Description.jsx",
     "app/components/page/PageMultiProposal/PageMultiProposal.jsx"
   ],

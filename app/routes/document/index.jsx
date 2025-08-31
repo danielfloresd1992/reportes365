@@ -76,6 +76,7 @@ export default function Document() {
                     if (errorCall) throw 'Error al cargar las alertas en el documento';
 
                     const { arr } = processDataNovelty({ summaryData, noveltyPageData, delayToastPostAndServise, establishmentStore, dataArr });
+                    console.log(arr);
                     arr.unshift(fronPageData);
                     const PromiseArr = [];
 
@@ -83,7 +84,7 @@ export default function Document() {
                         PromiseArr.push(addPageInDocument(documentDataResponse._id, page));
                     });
 
-                    const responses = await Promise.all(PromiseArr)
+                    const responses = await Promise.all(PromiseArr);
 
                     const idArr = responses.map(r => r.data.data._id);
                     const toSaveArrOrder = [...documentDataResponse.pages, ...idArr];
@@ -170,7 +171,8 @@ export default function Document() {
                 properties: 'imageToShare imageUrl validationResult menuEditedBy sharedByUser _id'
             }));
         }
-    }, [documentDataResponse])
+    }, [documentDataResponse]);
+
 
 
 

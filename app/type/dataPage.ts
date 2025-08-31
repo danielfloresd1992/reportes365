@@ -9,22 +9,22 @@ type createTime = {
 
 export type createBy = { createBy: string } | undefined | null;
 
-export type time = { timePeriod: { init: string | null, end: string | null }}
+export type time = { timePeriod: { init: string | null, end: string | null } }
 
 
-export type TimeToastPost = { 
-    timePeriod: { 
-        init: string | null, 
-        end: string | null ,
+export type TimeToastPost = {
+    timePeriod: {
+        init: string | null,
+        end: string | null,
 
-        tomaOrden: string | null, 
-        listoTablet: string | null, 
-        listoCocina: string | null, 
-        entregaPlato: string | null, 
+        tomaOrden: string | null,
+        listoTablet: string | null,
+        listoCocina: string | null,
+        entregaPlato: string | null,
     }
 }
 
-export type image = {imageUrl: [{ index: 0, url: null }, {index: 1, url: null}],}
+export type image = { imageUrl: [{ index: 0, url: null }, { index: 1, url: null }], }
 
 export type imageToastPos = { imageToShare: string }
 
@@ -39,8 +39,14 @@ export type TableProp = {
     body: [ObjectComplete | typeAlertToasdPos],
     addRowProp: () => void,
     editCellProp: (index: number, propiety: time | timeParams) => void,
-    deleteRowProp: (index: number , delay: typeAlertToasdPos | ObjectComplete) => void, 
+    deleteRowProp: (index: number, delay: typeAlertToasdPos | ObjectComplete) => void,
     orderTable: 'minor' | 'major' | undefined,
     saveOrder: () => void,
     styles: any
+}
+
+
+export type NoveltyRefernce = {
+    idReference: string,
+    data: any
 }

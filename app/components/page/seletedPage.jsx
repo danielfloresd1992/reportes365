@@ -110,7 +110,7 @@ export default function ReturnPage({ idPage, establishment, configProp, menusPro
             styles={configProp?.style}
             config={configProp}
             data={sectionDataState}
-            updateDataProp={data => console.log(data)/*updateData*/}
+            updateDataProp={data => updateData}
             deletePage={deletePageProp}
             dataId={idPage}
             indexPage={indexPage}
