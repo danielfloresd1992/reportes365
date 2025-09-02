@@ -156,18 +156,22 @@ export type DelayToastPostAndServise = {
 
         delayToastPost: {
             header: ['Mesas', 'Toma de orden', 'Listo en tablet', 'Tiempo total'],
-            delay: []
+            delay: [],
+            type: string
         },
 
 
         delayDeliveryDishWhenItIsReadyInKitchen: {
+            header: null
             delay: [],
+            type: string
         },
 
 
         delayServices: {
             header: ['Mesas', 'Toma de orden', 'Entrega ', 'Demora'],
-            delay: any[]
+            delay: any[],
+            type: string
         }
 
 

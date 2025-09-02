@@ -36,8 +36,8 @@ import TabletPos from './assets/tablet_pos';
 import DeliveyDelay from './assets/DelivryDishDelay';
 import Services from './assets/Services';
 
-
-
+import { pipeObjectTime, parserPipeOneObject, order } from '../../../../lib/dataParser/dataForNovelty';
+import { downloadJSON } from '../../../../lib/debbuger/create_file';
 
 
 export default memo(function CompoundPageDelayToastPosAndServices({ styles, config, data: dataProp, dish, updateDataProp, deletePage, dataId }) {
@@ -85,58 +85,11 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
 
 
-    const totalProcess = () => {
-        if (!bodyState) return { totalProcess: 0, totalDelayToasd: 0 };
-        let totalProcess = 0;
-        let totalDelayToasd = 0;
-        entriesNameState.forEach(food => {
-            if (bodyState[food]) {
-                totalProcess = Number(totalProcess + bodyState[food].totalProcess);
-                totalDelayToasd = totalDelayToasd + bodyState[food].delay.length;
-            }
-        });
-        return {
-            totalProcess,
-            totalDelayToasd
-        };
-    };
 
 
 
-    const pipeObjectTime = (data, invert) => {
-        if (!data) return null;
-        const returnArr = [];
-
-        data.forEach(delay => {
-            if (invert) {
-                delay.timePeriod.tomaOrden = delay.timePeriod.init;
-                delay.timePeriod.listoTablet = delay.timePeriod.end;
-            }
-            else {
-                delay.timePeriod.init = delay.timePeriod.tomaOrden;
-                delay.timePeriod.end = delay.timePeriod.listoTablet;
-            }
-
-            returnArr.push(delay);
-        });
-        return returnArr;
-    };
 
 
-
-    const parserPipeOneObject = (data, invert) => {
-        if (!data) return null;
-        const delay = { ...data };
-        if (delay.timePeriod && invert) {
-            delay.timePeriod.tomaOrden = delay.timePeriod.init;
-            delay.timePeriod.listoTablet = delay.timePeriod.end;
-        }
-        else if (delay.timePeriod) {
-            delay.timePeriod.init = delay.timePeriod.tomaOrden;
-            delay.timePeriod.end = delay.timesPeriod.listoTablet;
-        }
-        return delay;
-    };
 
 
 
@@ -184,7 +137,6 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
 
 
-
     const editCellService = useCallback((id, dataUpdate) => {
         const newBody = { ...dataProp.data };
         const findIndex = newBody.body.delayServices.delay.findIndex(delay => delay._id === id);
@@ -200,46 +152,28 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
 
 
-
-
-
-
-
-
-    const deleteDelayInTable = useCallback((id, typeFood) => {
-        if (!dataProp) return null;
-        const newBody = { ...dataProp.data };
-        newBody.body[typeFood].delay = newBody.body[typeFood].delay.filter(delay => delay._id !== id);
-        updateDataProp(newBody, (data, error) => {
-            console.log(error);
-            setBodyState(data);
-        });
-
-    }, [dataProp]);
-
-
-
-
-    const getNewUrlImg = useCallback((file, dataParams) => {
-        sendImg(file)
-            .then(response => {
-
-                if (dataParams.delay === 'delayDeliveryDishWhenItIsReadyInKitchen') {
-                    const newData = { ...dataParams.data };
-                    newData.imageUrl[dataParams.index].url = response.data.urlFile;
-                    editCell(dataParams.id, newData, 'delayDeliveryDishWhenItIsReadyInKitchen');
-                }
-                else {
-
-                    editCell(dataParams.id, { ...dataParams.data, imageToShare: response.data.urlFile }, dataParams.delay);
-                }
-            })
-            .catch(error => {
-                console.log(error);
-            })
-    }, [dataProp]);
-
-
+    /*
+    
+        const getNewUrlImg = useCallback((file, dataParams) => {
+            sendImg(file)
+                .then(response => {
+    
+                    if (dataParams.delay === 'delayDeliveryDishWhenItIsReadyInKitchen') {
+                        const newData = { ...dataParams.data };
+                        newData.imageUrl[dataParams.index].url = response.data.urlFile;
+                        editCell(dataParams.id, newData, 'delayDeliveryDishWhenItIsReadyInKitchen');
+                    }
+                    else {
+    
+                        editCell(dataParams.id, { ...dataParams.data, imageToShare: response.data.urlFile }, dataParams.delay);
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        }, [dataProp]);
+    
+    */
 
 
     const returnImg = (delay, typeFood) => {
@@ -285,20 +219,85 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
     };
 
 
-    console.log(establishmentStore);
+
+
+
+
+
+
+
+    const addCell = useCallback((foodType, callback) => {
+        console.log(foodType);
+
+        if (typeof callback === 'function') callback();
+
+    }, []);
+
+
+
+
+    const editCell = useCallback((data, type, callback) => {
+
+        const delayUpdate = parserPipeOneObject(data, true);
+
+
+        const getDelayCategory = getObjectByType(dataProp.data, type);
+
+
+        const findIndexDelay = getDelayCategory.delay.findIndex(delay => delay._id === delayUpdate._id);
+
+
+        const newDate = { ...dataProp };
+
+
+        newDate.data[getDelayCategory.key].delay[findIndexDelay] = delayUpdate;
+
+        console.log(newDate);
+
+        //downloadJSON(newDate);
+
+        /*
+        const newData = [...state];
+        const indexNovelty = newData.findIndex(delay => delay._id === delayUpdate._id);
+        newData[indexNovelty] = delayUpdate;
+        */
+
+        //downloadJSON()
+
+        if (typeof callback === 'function') callback();
+
+    }, [dataProp]);
+
+
+
+
+    const deleteCell = (id, callback) => {
+        const newData = state.filter(delay => delay._id !== id);
+
+        if (typeof callback === 'function') callback();
+    };
+
+
+
+
+
+
 
 
     if (!bodyState) return null;
 
 
-
-    const order = (data) => {
-        return pipeObjectTime(data).sort((a, b) => {
-            const duracionB = TimeOperator.changueTimeMiliSecond(b.timePeriod.end) - TimeOperator.changueTimeMiliSecond(b.timePeriod.init);
-            const duracionA = TimeOperator.changueTimeMiliSecond(a.timePeriod.end) - TimeOperator.changueTimeMiliSecond(a.timePeriod.init);
-            return duracionB - duracionA;
+    function getObjectByType(obj, typeValue) {
+        const found = Object.entries(obj).find(([key, value]) => {
+            return value && typeof value === 'object' && value.type === typeValue;
         });
-    };
+
+        if (!found) return null;
+
+        const [key, value] = found;
+        return { key, ...value }; // Incluye la clave y el contenido
+    }; // Si no se encuentra
+
 
 
 
@@ -351,10 +350,8 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
             <Legacy
                 {...{
                     bodyState,
-                    order,
                     chunkArr,
                     returnImg,
-                    deleteDelayInTable,
                     dishItem,
                     styles,
                     establishmentStore
@@ -367,45 +364,53 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                     summary: dataProp.data.summary,
                     dishItem,
                     styles,
-                    config
+                    config,
+
+                    addCell,
+                    editCell,
+                    deleteCell,
                 }}
             />
 
 
             {
-                console.log(dataProp.data
-                )
+                console.log(dataProp.data)
             }
+
 
             <TabletPos
                 {...{
                     delay_data: dataProp.data.delayToastPost,
                     dishItem,
                     chunkArr,
-                    pipeObjectTime,
-                    order,
                     returnImg,
                     styles,
+
+                    addCell,
+                    editCell,
+                    deleteCell,
                 }}
             />
 
 
-
-                   //////////  DELAY DELIVERY IN READY KICHEN
             <DeliveyDelay
                 {...{
                     delay_data: dataProp.data.delayDeliveryDishWhenItIsReadyInKitchen,
                     dishItem,
                     styles,
                 }}
-
             />
+
 
             <Services
                 {...{
                     delay_data: dataProp.data.delayServices,
                     dishItem,
-                    styles
+                    styles,
+
+                    addCell,
+                    editCell,
+                    deleteCell,
                 }}
             />
 

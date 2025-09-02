@@ -3,11 +3,11 @@ import { useState, useEffect, useCallback } from 'react';
 import TimeOperator from '../../../../../lib/time';
 import LayautNovelty from '../../../../layaut/LayautPage';
 import TableFourCol from '../../../../table/table';
+import { pipeObjectTime, parserPipeOneObject, order } from '../../../../../lib/dataParser/dataForNovelty';
 
 
 
-
-export default function TabletPos({ delay_data, dishItem, styles, returnImg, pipeObjectTime, chunkArr, order }) {
+export default function TabletPos({ delay_data, dishItem, styles, returnImg, chunkArr, addCell, editCell, deleteCell, }) {
 
 
     const [state, setState] = useState([]);
@@ -15,19 +15,6 @@ export default function TabletPos({ delay_data, dishItem, styles, returnImg, pip
 
     useEffect(() => {
         setState(delay_data.delay);
-    }, []);
-
-
-
-    const editCell = useCallback((id, dataUpdate, typeFood) => {
-        if (!dataProp) return null;
-        const newBody = { ...dataProp.data };
-        const indexDelay = newBody.body[typeFood].delay.findIndex(delay => delay._id === id);
-        if (indexDelay < 0) return null;
-        newBody.body[typeFood].delay[indexDelay] = { ...newBody.body[typeFood].delay[indexDelay], ...parserPipeOneObject(dataUpdate, true) };
-        updateDataProp(newBody, (data, error) => {
-            setBodyState(data);
-        });
     }, []);
 
 
@@ -70,9 +57,9 @@ export default function TabletPos({ delay_data, dishItem, styles, returnImg, pip
                                                     <TableFourCol
                                                         header={delay_data.header ?? []}
                                                         body={arr}
-                                                        addRowProp={() => addRowDelay(dish.nameDishe)}
-                                                        editCellProp={(index, data) => editCell(data._id, data, dish.nameDishe)}
-                                                        deleteRowProp={(index, delay) => deleteDelayInTable(delay._id, dish.nameDishe)}
+                                                        addRowProp={() => addCell(dish.nameDishe)}
+                                                        editCellProp={(index, data) => editCell(data, delay_data.type)}
+                                                        deleteRowProp={(index, delay) => deleteCell(delay._id)}
                                                         styles={styles}
                                                     />
                                                     {
@@ -118,12 +105,9 @@ export default function TabletPos({ delay_data, dishItem, styles, returnImg, pip
                             </>
                         )
                     }
-
-
+                    
                     return null;
                 })
-
-
             }
         </>
     )

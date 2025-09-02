@@ -226,23 +226,37 @@ export default function useDataForPages() {
 
             // LEGACE
             header: ['Mesas', 'Toma de orden', 'Listo en tablet', 'Demora en preparación'],
+
+
             body: {
 
             },
             // ///////
 
 
-            summary: {},
+            summary: {
+                type: 'summary'
+            },
+
+
             delayToastPost: {
                 header: ['Mesas', 'Toma de orden', 'Listo en tablet', 'Tiempo total'],
-                delay: []
+                delay: [],
+                type: 'toast_pos'
             },
+
+
             delayDeliveryDishWhenItIsReadyInKitchen: {
-                delay: []
+                header: null,
+                delay: [],
+                type: 'delivery'
             },
+
+
             delayServices: {
                 header: ['Mesas', 'Toma de orden', 'Entrega ', 'Demora'],
-                delay: []
+                delay: [],
+                type: 'services'
             }
         }
     };

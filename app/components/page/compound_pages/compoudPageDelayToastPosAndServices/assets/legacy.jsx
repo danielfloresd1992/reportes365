@@ -5,17 +5,49 @@ import LayautNovelty from '../../../../layaut/LayautPage';
 import TabletLayaut from '../../../../table/table_layaut';
 import TableFourCol from '../../../../table/table';
 
+import { pipeObjectTime, parserPipeOneObject, order } from '../../../../../lib/dataParser/dataForNovelty';
 
 
 
 export default function Legacy({
     bodyState,
-    order,
     chunkArr,
     returnImg,
-    deleteDelayInTable,
     dishItem
 }) {
+
+
+
+    const totalProcess = () => {
+        if (!bodyState) return { totalProcess: 0, totalDelayToasd: 0 };
+        let totalProcess = 0;
+        let totalDelayToasd = 0;
+        entriesNameState.forEach(food => {
+            if (bodyState[food]) {
+                totalProcess = Number(totalProcess + bodyState[food].totalProcess);
+                totalDelayToasd = totalDelayToasd + bodyState[food].delay.length;
+            }
+        });
+        return {
+            totalProcess,
+            totalDelayToasd
+        };
+    };
+
+
+
+
+
+    const deleteDelayInTable = useCallback((id, typeFood) => {
+        if (!dataProp) return null;
+        const newBody = { ...dataProp.data };
+        newBody.body[typeFood].delay = newBody.body[typeFood].delay.filter(delay => delay._id !== id);
+        updateDataProp(newBody, (data, error) => {
+            console.log(error);
+            setBodyState(data);
+        });
+
+    }, []);
 
 
 
