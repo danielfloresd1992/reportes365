@@ -48,7 +48,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
 
     const establishmentStore = useSelector(store => store.establishmentDocument);
-    const [bodyState, setBodyState] = useState(null);
+    const [dataState, setDataState] = useState(null);
 
     const [entriesNameState, setEntriesNameState] = useState([]);
 
@@ -63,7 +63,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
 
     useEffect(() => {
-        setBodyState({ ...dataProp.data.body });
+        setDataState({ ...dataProp.data });
     }, []);
 
 
@@ -103,7 +103,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
             .catch(error => {
                 console.log(error);
             })
-    }, [dataProp]);
+    }, []);
 
 
 
@@ -141,6 +141,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
 
 
+
     // ADD LIST ALL
     const addCell = useCallback((data, type) => {
         console.log(type);
@@ -155,18 +156,18 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
     // PUT COMPONENT ALL
     const editCell = useCallback((data, type) => {
 
-        const getDelayCategory = getObjectByType(dataProp.data, type);
-        const dataForRequest = { ...dataProp.data };
+        const getDelayCategory = getObjectByType(dataState, type);
+        const dataForRequest = { ...dataState };
         dataForRequest[getDelayCategory.key] = data;
 
+        console.warn(dataForRequest);
 
         updateDataProp(dataForRequest, (data, error) => {
 
         });
 
 
-    }, [dataProp]);
-
+    }, [dataState]);
 
 
 
@@ -186,7 +187,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
 
 
-    if (!establishmentStore || !bodyState) return null;
+    if (!establishmentStore || !dataState) return null;
 
 
 
@@ -233,7 +234,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
             <Legacy
                 {...{
-                    bodyState,
+                    bodyState: dataState,
                     returnImg,
                     dishItem,
                     styles,
@@ -244,7 +245,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
             <Summary
                 {...{
-                    summary: dataProp.data.summary,
+                    summary: dataState.summary,
                     dishItem,
                     styles,
                     config,
@@ -255,7 +256,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
             <TabletPos
                 {...{
-                    delay_data: dataProp.data.delayToastPost,
+                    delay_data: dataState.delayToastPost,
                     dishItem,
                     returnImg,
                     styles,
@@ -267,7 +268,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
             <DeliveyDelay
                 {...{
-                    delay_data: dataProp.data.delayDeliveryDishWhenItIsReadyInKitchen,
+                    delay_data: dataState.delayDeliveryDishWhenItIsReadyInKitchen,
                     dishItem,
                     styles,
                 }}
@@ -276,7 +277,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
             <Services
                 {...{
-                    delay_data: dataProp.data.delayServices,
+                    delay_data: dataState.delayServices,
                     dishItem,
                     styles,
                     addCell,
@@ -286,7 +287,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
 
 
-            <FooterPage eventClick={() => console.log(bodyState)} />
+            <FooterPage eventClick={() => console.log(dataState)} />
         </LayautPages>
     );
-});
+})

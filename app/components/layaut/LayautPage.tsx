@@ -60,6 +60,7 @@ export default function LayautNovelty({
     const [{ x, y }, set] = useSpring(() => ({ x: 0, y: 0 }));
 
 
+
     const bind = useDrag(
         ({ active, movement: [mx], event: any }) => { // Solo usamos mx (eje X)
 
@@ -71,9 +72,6 @@ export default function LayautNovelty({
                     y: 0 // Bloquea eje Y
                 });
             }
-
-
-
         },
         {
             axis: 'x', // Solo movimiento horizontal

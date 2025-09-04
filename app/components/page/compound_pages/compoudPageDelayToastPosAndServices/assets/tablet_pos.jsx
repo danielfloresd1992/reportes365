@@ -28,7 +28,7 @@ export default function TabletPos({ delay_data, dishItem, styles, returnImg, add
         const indexDelay = state.findIndex(item => item._id === data._id);
         const nreArr = [...state];
         nreArr[indexDelay] = parseData;
-        editCell(nreArr, delay_data.type)
+        editCell({ ...delay_data, delay: nreArr }, delay_data.type);
     };
 
 
@@ -40,6 +40,13 @@ export default function TabletPos({ delay_data, dishItem, styles, returnImg, add
 
 
 
+    console.warn(
+        '%cDELAY%c →',
+        'background:#111;color:#7fffd4;padding:2px 6px;border-radius:4px;font-weight:600',
+        'color:#999;font-style:italic',
+        delay_data);
+
+    console.log(dishItem)
 
 
     return (
@@ -50,8 +57,6 @@ export default function TabletPos({ delay_data, dishItem, styles, returnImg, add
                     const delatTypeOfDish = Array.isArray(state) ? state.filter(delay => delay.nameDish === dish.nameDishe) : [];
 
                     if (delatTypeOfDish.length > 0) {
-
-                        console.error(state);
 
 
                         return (
@@ -75,10 +80,7 @@ export default function TabletPos({ delay_data, dishItem, styles, returnImg, add
                                                         header={delay_data.header ?? []}
                                                         body={arr}
                                                         addRowProp={() => addCell(dish.nameDishe)}
-
                                                         editCellProp={updateCell}
-
-
                                                         deleteRowProp={(index, delay) => deleteCell(delay._id)}
                                                         styles={styles}
                                                     />

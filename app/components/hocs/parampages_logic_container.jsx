@@ -1,26 +1,21 @@
-import { useEffect, forwardRef, useContext } from 'react';
+import { useEffect, forwardRef } from 'react';
 import Sortable from 'sortablejs';
 import { useDispatch } from 'react-redux';
 import { setConfigAwait } from '../../store/slices/awaitStore';
 import useAdapterResize from '../../hook/adapter_resize';
 import { htmlToPng } from '../../lib/file/toPng';
-import { myUserContext } from '../../context/sessionContext';
 import { pdfClassic } from '../../lib/file/pdf';
-import shiftToEs from '../../lib/script/shit_lang';
-
 import NavBarOption from '../headerComponens/NasBarOption';
 
 
 
 
 
-const ContentPages = forwardRef(({ nameDocument, children }, ref) => {
+const ContentPages = forwardRef(({ nameDocument, updateOrder, idDocument, children }, ref) => {
 
 
     const dispatch = useDispatch();
     const { htmlAdapterRef, resetDefault } = useAdapterResize({ breackWidth: 1530, breackMinWidth: { breackWidth: 1210, limit: 1100 } });
-    const { dataSessionState } = useContext(myUserContext);
-    const documentDataCookie = dataSessionState?.dataSession?.activity;
 
 
 
@@ -33,8 +28,9 @@ const ContentPages = forwardRef(({ nameDocument, children }, ref) => {
                 swapThreshold: 1,
                 ghostClass: 'sortable-ghost',
                 onEnd: () => {
+                    console.log(idDocument);
                     const newOrder = sortable.toArray();
-                    updateDataPage(newOrder, true);
+                    updateOrder(newOrder, idDocument);
                 },
                 onMove: e => {
                     if (e.target.classList.contains('locked')) return false;
@@ -48,7 +44,7 @@ const ContentPages = forwardRef(({ nameDocument, children }, ref) => {
                 sortable.destroy();
             }
         }
-    }, []);
+    }, [idDocument]);
 
 
 
@@ -90,9 +86,7 @@ const ContentPages = forwardRef(({ nameDocument, children }, ref) => {
             if (typeof document !== undefined) document.body.style.cursor = 'wait';
 
 
-
             const htmlCollection = Array.from(htmlAdapterRef.current.querySelectorAll('#page-page'));
-
             const result = await htmlToPng(htmlCollection);
 
             dispatch(setConfigAwait({

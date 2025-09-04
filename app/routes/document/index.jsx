@@ -29,8 +29,10 @@ import { processDataNovelty } from '../../lib/dataParser/arrNovelty';
 export default function Document() {
 
 
-    const [documentDataResponse, setDataResponse] = useState(null);
+    const [documentState, setDocumentState] = useState(null);
+
     const [pagesForPreviewState, setPagesForPreviewState] = useState([]);
+
     const [hydratatedBooleanState, setHydratateState] = useState(true);
     const { dataSessionState } = useContext(myUserContext);
     const documentDataCookie = dataSessionState?.dataSession?.activity;
@@ -40,6 +42,7 @@ export default function Document() {
     const keyRef = useRef(true);
 
     const dispatch = useDispatch();
+
 
 
 
@@ -65,7 +68,7 @@ export default function Document() {
         }
 
 
-        if (documentDataResponse && establishmentStore && documentDataCookie && documentDataResponse.pages.length === 0 && keyRef.current) {
+        if (documentState && establishmentStore && documentDataCookie && documentState.pages.length === 0 && keyRef.current) {
             keyRef.current = false;
 
 
@@ -81,34 +84,34 @@ export default function Document() {
                     const PromiseArr = [];
 
                     arr.forEach(page => {
-                        PromiseArr.push(addPageInDocument(documentDataResponse._id, page));
+                        PromiseArr.push(addPageInDocument(documentState._id, page));
                     });
 
                     const responses = await Promise.all(PromiseArr);
 
                     const idArr = responses.map(r => r.data.data._id);
-                    const toSaveArrOrder = [...documentDataResponse.pages, ...idArr];
+                    const toSaveArrOrder = [...documentState.pages, ...idArr];
 
                     // Paso 5: Actualizar estado
-                    setDataResponse({
-                        ...documentDataResponse,
+                    setDocumentState({
+                        ...documentState,
                         pages: toSaveArrOrder
                     });
 
-                    updatePage(toSaveArrOrder);
+                    updateSessionOrder(toSaveArrOrder);
                     changueText('Documento hidratado por Jarvis 🤖', 'springgreen');
                 }
                 catch (error) {
                     console.error(error);
                     changueText('Documento en modo manual', 'red');
-                    const responseFront = await addPageInDocument(documentDataResponse._id, fronPageData);
-                    const responseSummary = await addPageInDocument(documentDataResponse._id, summaryData);
+                    const responseFront = await addPageInDocument(documentState._id, fronPageData);
+                    const responseSummary = await addPageInDocument(documentState._id, summaryData);
                     const responses = await Promise.all([responseFront, responseSummary]);
                     const idArr = responses.map(r => r.data.data._id);
-                    const toSaveArrOrder = [...documentDataResponse.pages, ...idArr];
+                    const toSaveArrOrder = [...documentState.pages, ...idArr];
 
-                    setDataResponse({
-                        ...documentDataResponse,
+                    setDocumentState({
+                        ...documentState,
                         pages: toSaveArrOrder
                     });
 
@@ -122,7 +125,7 @@ export default function Document() {
                 }
             });
         }
-    }, [documentDataResponse, dataSessionState, , establishmentStore, keyRef]);
+    }, [documentState, dataSessionState, , establishmentStore, keyRef]);
 
 
 
@@ -131,18 +134,18 @@ export default function Document() {
 
     const hydrateDocumentWithJarvis = useCallback((data, callback) => {
         if (hydratatedBooleanState) {
-            const arrDate = documentDataResponse.date.split('-');
+            const arrDate = documentState.date.split('-');
             const dateFormatted = `${arrDate[1]}-${arrDate[2]}-${arrDate[0]}`;
             getNoveltyForHydration({
-                nameEstablishment: documentDataResponse.establishmentName,
+                nameEstablishment: documentState.establishmentName,
                 date: dateFormatted,
-                shift: documentDataResponse.shift === 'unique' ? 'all' : documentDataResponse.shift,
+                shift: documentState.shift === 'unique' ? 'all' : documentState.shift,
                 populate: 'menuRef',
                 properties: 'imageToShare imageUrl validationResult menuEditedBy sharedByUser _id'
             })
                 .then(response => {
                     const filteredWithoutMenu = response.data.filter(item => { if (item.menuRef) return item });
-                    if (documentDataResponse.jarvisNewsHydration === false) {
+                    if (documentState.jarvisNewsHydration === false) {
                         const filteredForDocuments = filteredWithoutMenu.filter(items => items.menuRef.useOnlyForTheReportingDocument === true);
                         callback(filteredForDocuments);
                     }
@@ -152,7 +155,7 @@ export default function Document() {
                     callback(null, error);
                 });
         }
-    }, [documentDataResponse, establishmentStore]);
+    }, [documentState, establishmentStore]);
 
 
 
@@ -160,36 +163,36 @@ export default function Document() {
 
 
     useEffect(() => {
-        if (documentDataResponse) {
-            const arrDate = documentDataResponse.date.split('-');
+        if (documentState) {
+            const arrDate = documentState.date.split('-');
             const dateFormatted = `${arrDate[1]}-${arrDate[2]}-${arrDate[0]}`;
             dispatch(setQueryAlertDocument({
-                nameEstablishment: documentDataResponse.establishmentName,
+                nameEstablishment: documentState.establishmentName,
                 date: dateFormatted,
                 shift: 'all',
                 populate: 'menuRef',
                 properties: 'imageToShare imageUrl validationResult menuEditedBy sharedByUser _id'
             }));
         }
-    }, [documentDataResponse]);
+    }, [documentState]);
 
 
 
 
     const setDocumentProps = useCallback((dataFromRequest) => {
-        setDataResponse(dataFromRequest);
-    }, [documentDataResponse]);
+        setDocumentState(dataFromRequest);
+    }, [documentState]);
 
 
 
 
-
-    const addPageProp = useCallback((document, body, callback) => {
-        addPageInDocument(documentDataResponse._id, body)
+    // AGREGA SESSIIONES AL DOCUMENTOS
+    const addSection = useCallback((document, body, callback) => {
+        addPageInDocument(documentState._id, body)
             .then(response => {
-                const result = { ...documentDataResponse, pages: [...documentDataResponse.pages, response.data.data._id] };
+                const result = { ...documentState, pages: [...documentState.pages, response.data.data._id] };
                 if (typeof callback === 'function') callback(result);
-                setDataResponse(result);
+                setDocumentState(result);
                 changueText(`Add Section ✅`, 'springgreen', true);
             })
             .catch(error => {
@@ -210,51 +213,50 @@ export default function Document() {
                     open: true,
                 }));
             });
-    }, [documentDataResponse]);
+    }, [documentState]);
+
+
+
+
+    // GUARDA EL ORDEN DE LAS SESSIONES AL MOVERLAS
+    const updateSessionOrder = (dataArr, id, reder = false) => {
+        if (id) {
+            patchDocumentById(id, { pages: dataArr })
+                .then(response => {
+                    if (reder) setDataResponse({ ...documentDataResponse, pages: dataArr });
+                })
+                .catch(error => console.log(error));
+        }
+    };
 
 
 
 
 
-    const updatePage = useCallback((dataArr, reder) => {
-        patchDocumentById(documentDataResponse._id, { pages: dataArr })
+    // BORRA SESSIONES DEL DOCUIMENTO
+    const deleteSession = useCallback((idDocument, idPage) => {
+        deletePageInDocument(documentState._id, idPage)
             .then(response => {
-                if (reder) setDataResponse({ ...documentDataResponse, pages: dataArr });
-            })
-            .catch(error => console.log(error));
-    }, [documentDataResponse]);
-
-
-
-
-    const deletePage = useCallback((idDocument, idPage) => {
-        deletePageInDocument(documentDataResponse._id, idPage)
-            .then(response => {
-                const fillPage = documentDataResponse.pages.filter(id => id !== idPage);
-                setDataResponse({ ...documentDataResponse, pages: fillPage });
+                const fillPage = documentState.pages.filter(id => id !== idPage);
+                setDocumentState({ ...documentState, pages: fillPage });
                 changueText(`Deleted Section ✅`, 'springgreen');
             })
             .catch(error => {
                 console.log(error);
                 changueText(`Error on delete Section ❗`, 'springgreen', true);
             });
-    }, [documentDataResponse]);
-
-
+    }, [documentState]);
 
 
 
 
     const addPagesForPreview = useCallback((page) => {
-
         setPagesForPreviewState((stateCurrent) => {
-
             const index = stateCurrent.findIndex(pageParams => pageParams?._id === page?._id);
             if (index < 0) return [...stateCurrent, page];
             else return stateCurrent;
-
         });
-    }, [documentDataResponse, pagesForPreviewState]);
+    }, [documentState, pagesForPreviewState]);
 
 
 
@@ -266,22 +268,24 @@ export default function Document() {
             <CompleteLayaut>
                 <div className='relative w-full h-full flex justify-center flex-wrap'>
                     <AsideClonePage
-                        addData={addPageProp}
-                        pagesIds={documentDataResponse?.pages}
+                        addData={addSection}
+                        pagesIds={documentState?.pages}
                         pages={pagesForPreviewState}
-                        coundDocument={documentDataResponse?.pages?.length}
-                        updateDataPage={updatePage}
+                        coundDocument={documentState?.pages?.length}
+                        updateOrder={updateSessionOrder}
+                        idDocument={documentState?._id}
                     />
 
                     <ContentPage
-                        documentArr={documentDataResponse?.pages}
+                        documentArr={documentState?.pages}
                         establishmentProp={establishmentStore}
                         setDocumentProps={setDocumentProps}
-                        updateDataPage={updatePage}
+                        updateOrder={updateSessionOrder}
                         addPagesForPreviewProp={addPagesForPreview}
-                        deletePage={deletePage}
+                        deletePage={deleteSession}
                         ref={refElement}
-                        nameDocument={`${documentDataResponse?.establishmentName} ${shiftToEs(documentDataResponse?.shift)} ${documentDataResponse?.date}`}
+                        nameDocument={`${documentState?.establishmentName} ${shiftToEs(documentState?.shift)} ${documentState?.date}`}
+                        idDocument={documentState?._id}
                     />
 
                     <ContentPreviewDocument />

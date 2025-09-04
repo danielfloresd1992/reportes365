@@ -20,7 +20,7 @@ import icoMove from '../../../../public/ico/icons8-arrastrar-lista-hacia-arriba-
 
 
 
-export default memo(function AsideClonePage({ pages, pagesIds, addData, coundDocument, updateDataPage }: any) {
+export default memo(function AsideClonePage({ pages, pagesIds, addData, coundDocument, updateOrder, idDocument }: any) {
 
 
     const { fronPageData, noveltyPageData, summaryData, touchPageData, delay1attention, delayClean, delayToastPostAndServise } = useDataForPages();
@@ -52,7 +52,7 @@ export default memo(function AsideClonePage({ pages, pagesIds, addData, coundDoc
                 },
                 onEnd: (e) => {
                     const newOrder = sortable.toArray();
-                    updateDataPage(newOrder, true);
+                    updateOrder(newOrder, idDocument, true);
                 },
                 forceFallback: true,
 
