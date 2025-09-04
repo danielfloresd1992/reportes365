@@ -14,7 +14,7 @@ import InputTitle from '../inputs/inputTitle';
 
 
 type configHammer = {
-    callbackDelete: () => void,
+    callbackDelete: (() => void) | undefined | null,
     deleteOnSwipe: boolean
 }
 
@@ -45,7 +45,7 @@ export default function LayautNovelty({
     editTitle,
     heigthAuto,
     title,
-    onSwipeRight,
+    onSwipeRight = { deleteOnSwipe: false, callbackDelete: null },
     getElementLayaut,
     boubleClickEvent,
     idNovelty,
@@ -57,13 +57,13 @@ export default function LayautNovelty({
     const arrowRef = useRef<HTMLDivElement>(null);
     const refLayautNovelty = useRef<HTMLDivElement>(null)
 
-    const [{ x, y }, set] = useSpring(() => ({ x: 0, y: 0 }))
+    const [{ x, y }, set] = useSpring(() => ({ x: 0, y: 0 }));
 
 
     const bind = useDrag(
-        ({ active, movement: [mx], event }) => { // Solo usamos mx (eje X)
+        ({ active, movement: [mx], event: any }) => { // Solo usamos mx (eje X)
 
-            if (onSwipeRight.deleteOnSwipe && Math.max(0, mx) > 650) onSwipeRight.callbackDelete();
+            if (onSwipeRight.deleteOnSwipe && Math.max(0, mx) > 650 && typeof onSwipeRight.callbackDelete === 'function') onSwipeRight?.callbackDelete();
 
             if (onSwipeRight.deleteOnSwipe && event?.target?.id == 'draggable-delete') {
                 set({
@@ -71,12 +71,15 @@ export default function LayautNovelty({
                     y: 0 // Bloquea eje Y
                 });
             }
+
+
+
         },
         {
             axis: 'x', // Solo movimiento horizontal
             bounds: { left: 0 }, // Bloquea movimiento negativo
             rubberband: 0.5, // Resistencia al llegar al límite
-            from: () => [x.get(), 0] // Mantiene posición actual
+            from: () => { if (onSwipeRight.deleteOnSwipe) return [x.get(), 0] } // Mantiene posición actual
         }
     );
 

@@ -44,7 +44,12 @@ export default function ReturnPage({ idPage, establishment, configProp, menusPro
 
 
     const uddateBodyData = useCallback((body, callback) => {
+        console.log(sectionDataState)
+        console.log(body);
         const dataForUpdate = { ...sectionDataState, data: { ...sectionDataState.data, ...body } };
+        console.log(dataForUpdate);
+
+        /*
         updatePageInDocument(sectionDataState?._id, dataForUpdate)
             .then(response => {
                 callback(response.data.data.data.body)
@@ -53,7 +58,7 @@ export default function ReturnPage({ idPage, establishment, configProp, menusPro
                 console.log(error);
                 callback(null, error)
             });
-
+        */
     }, [sectionDataState]);
 
 

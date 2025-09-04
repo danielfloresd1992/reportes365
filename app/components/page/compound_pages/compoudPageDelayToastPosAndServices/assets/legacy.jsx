@@ -6,15 +6,19 @@ import TabletLayaut from '../../../../table/table_layaut';
 import TableFourCol from '../../../../table/table';
 
 import { pipeObjectTime, parserPipeOneObject, order } from '../../../../../lib/dataParser/dataForNovelty';
+import { chunkArr, chunkArray } from '../../../../../lib/dataParser/arr';
 
 
 
-export default function Legacy({
-    bodyState,
-    chunkArr,
-    returnImg,
-    dishItem
-}) {
+
+export default function Legacy({ bodyState, returnImg, dishItem }) {
+
+
+
+    const styleCellBorder = 'border border-black text-lg';
+    const styleCellBorderR = 'text-center border-r border-r-solid border-r-black';
+    const styleCell = 'text-center w-1/3';
+    const fontSizes = { fontSize: '1.2rem' };
 
 
 
@@ -33,6 +37,51 @@ export default function Legacy({
             totalDelayToasd
         };
     };
+
+
+
+
+
+    const addRowDelay = useCallback((typeFood, typeDelay) => {
+        const row = {
+            _id: uuidv4(),
+            table: '0',
+            imageToShare: null,
+            createdAt: TimeOperator.returnTimeIso(),
+            nameDish: typeFood,
+            timePeriod: {
+                tomaOrden: '00:00:00',
+                listoTablet: '00:00:00',
+                listoCocina: '00:00:00',
+                EntregaPLato: '00:00:00',
+                timeTotal: null
+            }
+
+        };
+        const newBody = { ...dataProp.data };
+
+        if (typeDelay === 'delivery') {
+            row.imageUrl = [
+                { _id: uuidv4(), caption: 'Toma de Orden', url: null, index: 0 },
+                { _id: uuidv4(), caption: 'Listo en cocina', url: null, index: 1 },
+                { _id: uuidv4(), caption: 'Listo en tablet', url: null, index: 2 },
+                { _id: uuidv4(), caption: 'Entrega de plato', url: null, index: 3 }
+            ]
+            if (!newBody.body?.delayDeliveryDishWhenItIsReadyInKitchen?.delay) {
+                newBody.body['delayDeliveryDishWhenItIsReadyInKitchen'].delay = [];
+            }
+            newBody.body['delayDeliveryDishWhenItIsReadyInKitchen'].delay.push(row);
+        }
+        else {
+            newBody.body[typeFood].delay.push(row);
+        }
+
+
+        updateDataProp(newBody, (data, error) => {
+            setBodyState(data);
+        });
+
+    }, [bodyState]);
 
 
 

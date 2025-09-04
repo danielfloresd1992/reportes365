@@ -59,3 +59,14 @@ export const chunkArray = (arr, chunkSizeParams) => {
     }
     return arrayForReturn;
 };
+
+
+
+export const chunkArr = (arrProps) => {
+    const chunkSize = 4;
+    const returnArr = [];
+    for (let i = 0; i < arrProps.length; i += chunkSize) {
+        returnArr.push(arrProps.slice(i, i + chunkSize));
+    }
+    return returnArr;
+};

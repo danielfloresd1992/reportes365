@@ -12,13 +12,13 @@ import InputStandart from '../../../inputs/input_standart';
 import InputPasteEventReusable from '../../../inputs/inputPasteEventReusable';
 
 
-import TabletLayaut from '../../../table/table_layaut';
+
 
 
 import TimeOperator from '../../../../lib/time';
 
 import tranUrlToLocal from '../../../../lib/fetching/transUrlLocal';
-import { chunkArray } from '../../../../lib/./dataParser/arr';
+
 import { sendImg } from '../../../../lib/fetching/documents'
 import icoGrafic from '../../../../../public/ico/ico_page_metric/icons8-gráfico-combinado-48.png';
 import icoReloj from '../../../../../public/ico/icons8-reloj-50.png';
@@ -40,6 +40,9 @@ import { pipeObjectTime, parserPipeOneObject, order } from '../../../../lib/data
 import { downloadJSON } from '../../../../lib/debbuger/create_file';
 
 
+
+
+
 export default memo(function CompoundPageDelayToastPosAndServices({ styles, config, data: dataProp, dish, updateDataProp, deletePage, dataId }) {
 
 
@@ -54,11 +57,6 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
     const { findNovelty } = useFindArticle();
 
 
-    const styleCellBorder = 'border border-black text-lg';
-    const styleCellBorderR = 'text-center border-r border-r-solid border-r-black';
-    const styleCell = 'text-center w-1/3';
-    const fontSizes = { fontSize: '1.2rem' };
-
 
     const dishItem = establishmentStore.dishes;
 
@@ -66,7 +64,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
     useEffect(() => {
         setBodyState({ ...dataProp.data.body });
-    }, [])
+    }, []);
 
 
 
@@ -88,92 +86,26 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
 
 
+    const getNewUrlImg = useCallback((file, dataParams) => {
+        sendImg(file)
+            .then(response => {
+
+                if (dataParams.delay === 'delayDeliveryDishWhenItIsReadyInKitchen') {
+                    const newData = { ...dataParams.data };
+                    newData.imageUrl[dataParams.index].url = response.data.urlFile;
+                    editCell(dataParams.id, newData, 'delayDeliveryDishWhenItIsReadyInKitchen');
+                }
+                else {
+
+                    editCell(dataParams.id, { ...dataParams.data, imageToShare: response.data.urlFile }, dataParams.delay);
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    }, [dataProp]);
 
 
-
-
-
-
-    const addRowDelay = useCallback((typeFood, typeDelay) => {
-        const row = {
-            _id: uuidv4(),
-            table: '0',
-            imageToShare: null,
-            createdAt: TimeOperator.returnTimeIso(),
-            nameDish: typeFood,
-            timePeriod: {
-                tomaOrden: '00:00:00',
-                listoTablet: '00:00:00',
-                listoCocina: '00:00:00',
-                EntregaPLato: '00:00:00',
-                timeTotal: null
-            }
-
-        };
-        const newBody = { ...dataProp.data };
-
-        if (typeDelay === 'delivery') {
-            row.imageUrl = [
-                { _id: uuidv4(), caption: 'Toma de Orden', url: null, index: 0 },
-                { _id: uuidv4(), caption: 'Listo en cocina', url: null, index: 1 },
-                { _id: uuidv4(), caption: 'Listo en tablet', url: null, index: 2 },
-                { _id: uuidv4(), caption: 'Entrega de plato', url: null, index: 3 }
-            ]
-            if (!newBody.body?.delayDeliveryDishWhenItIsReadyInKitchen?.delay) {
-                newBody.body['delayDeliveryDishWhenItIsReadyInKitchen'].delay = [];
-            }
-            newBody.body['delayDeliveryDishWhenItIsReadyInKitchen'].delay.push(row);
-        }
-        else {
-            newBody.body[typeFood].delay.push(row);
-        }
-
-
-        updateDataProp(newBody, (data, error) => {
-            setBodyState(data);
-        });
-
-    }, [dataProp, bodyState]);
-
-
-
-    const editCellService = useCallback((id, dataUpdate) => {
-        const newBody = { ...dataProp.data };
-        const findIndex = newBody.body.delayServices.delay.findIndex(delay => delay._id === id);
-        console.log(newBody.body.delayServices.delay);
-        newBody.body.delayServices.delay[findIndex] = dataUpdate;
-        updateDataProp(newBody, (data, error) => {
-            setBodyState(data);
-        });
-    }, [dataProp, bodyState]);
-
-
-
-
-
-
-    /*
-    
-        const getNewUrlImg = useCallback((file, dataParams) => {
-            sendImg(file)
-                .then(response => {
-    
-                    if (dataParams.delay === 'delayDeliveryDishWhenItIsReadyInKitchen') {
-                        const newData = { ...dataParams.data };
-                        newData.imageUrl[dataParams.index].url = response.data.urlFile;
-                        editCell(dataParams.id, newData, 'delayDeliveryDishWhenItIsReadyInKitchen');
-                    }
-                    else {
-    
-                        editCell(dataParams.id, { ...dataParams.data, imageToShare: response.data.urlFile }, dataParams.delay);
-                    }
-                })
-                .catch(error => {
-                    console.log(error);
-                })
-        }, [dataProp]);
-    
-    */
 
 
     const returnImg = (delay, typeFood) => {
@@ -209,25 +141,9 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
 
 
-    const chunkArr = (arrProps) => {
-        const chunkSize = 4;
-        const returnArr = [];
-        for (let i = 0; i < arrProps.length; i += chunkSize) {
-            returnArr.push(arrProps.slice(i, i + chunkSize));
-        }
-        return returnArr;
-    };
-
-
-
-
-
-
-
-
-
-    const addCell = useCallback((foodType, callback) => {
-        console.log(foodType);
+    // ADD LIST ALL
+    const addCell = useCallback((data, type) => {
+        console.log(type);
 
         if (typeof callback === 'function') callback();
 
@@ -236,55 +152,24 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
 
 
-    const editCell = useCallback((data, type, callback) => {
-
-        const delayUpdate = parserPipeOneObject(data, true);
-
+    // PUT COMPONENT ALL
+    const editCell = useCallback((data, type) => {
 
         const getDelayCategory = getObjectByType(dataProp.data, type);
+        const dataForRequest = { ...dataProp.data };
+        dataForRequest[getDelayCategory.key] = data;
 
 
-        const findIndexDelay = getDelayCategory.delay.findIndex(delay => delay._id === delayUpdate._id);
+        updateDataProp(dataForRequest, (data, error) => {
 
+        });
 
-        const newDate = { ...dataProp };
-
-
-        newDate.data[getDelayCategory.key].delay[findIndexDelay] = delayUpdate;
-
-        console.log(newDate);
-
-        //downloadJSON(newDate);
-
-        /*
-        const newData = [...state];
-        const indexNovelty = newData.findIndex(delay => delay._id === delayUpdate._id);
-        newData[indexNovelty] = delayUpdate;
-        */
-
-        //downloadJSON()
-
-        if (typeof callback === 'function') callback();
 
     }, [dataProp]);
 
 
 
 
-    const deleteCell = (id, callback) => {
-        const newData = state.filter(delay => delay._id !== id);
-
-        if (typeof callback === 'function') callback();
-    };
-
-
-
-
-
-
-
-
-    if (!bodyState) return null;
 
 
     function getObjectByType(obj, typeValue) {
@@ -296,14 +181,13 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
         const [key, value] = found;
         return { key, ...value }; // Incluye la clave y el contenido
-    }; // Si no se encuentra
+    };
 
 
 
 
-    if (!establishmentStore) return null;
+    if (!establishmentStore || !bodyState) return null;
 
-    console.log(establishmentStore);
 
 
 
@@ -314,7 +198,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                     <InputStandart
                         type='select'
                         textLabel='Entrega'
-                        setValue={(value) => addRowDelay(value, 'delivery')}
+                        setValue={(value) => { }}
                         name='type-food'
                         resectSelect={true}
                     >
@@ -330,7 +214,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                     <InputStandart
                         type='select'
                         textLabel='Preparación'
-                        setValue={addRowDelay}
+                        setValue={() => { }}
                         name='type-food'
                         resectSelect={true}
                         value=''
@@ -350,7 +234,6 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
             <Legacy
                 {...{
                     bodyState,
-                    chunkArr,
                     returnImg,
                     dishItem,
                     styles,
@@ -365,30 +248,19 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                     dishItem,
                     styles,
                     config,
-
-                    addCell,
-                    editCell,
-                    deleteCell,
+                    editCell
                 }}
             />
-
-
-            {
-                console.log(dataProp.data)
-            }
 
 
             <TabletPos
                 {...{
                     delay_data: dataProp.data.delayToastPost,
                     dishItem,
-                    chunkArr,
                     returnImg,
                     styles,
-
                     addCell,
-                    editCell,
-                    deleteCell,
+                    editCell
                 }}
             />
 
@@ -407,10 +279,8 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                     delay_data: dataProp.data.delayServices,
                     dishItem,
                     styles,
-
                     addCell,
                     editCell,
-                    deleteCell,
                 }}
             />
 
