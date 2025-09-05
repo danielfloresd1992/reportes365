@@ -44,31 +44,12 @@ export default function ReturnPage({ idPage, establishment, configProp, menusPro
 
 
     const uddateBodyData = useCallback((body, callback) => {
-
-        if (sectionDataState.type === 'delayToastPostAndServise') {
-            console.log(sectionDataState);
-            console.error(body)
-        }
         const dataForUpdate = { ...sectionDataState, data: { ...sectionDataState.data, ...body } };
-
-        if (dataForUpdate.type === 'delayToastPostAndServise') {
-            console.log(
-                '%cUSER%c →',
-                'background:#111;color:#7fffd4;padding:2px 6px;border-radius:4px;font-weight:600',
-                'color:#999;font-style:italic',
-                dataForUpdate);
-        }
-
-
         updatePageInDocument(sectionDataState?._id, dataForUpdate)
             .then(response => {
                 callback(response.data.data.data.body)
             })
             .catch(error => {
-
-
-                
-
                 callback(null, error)
             });
 

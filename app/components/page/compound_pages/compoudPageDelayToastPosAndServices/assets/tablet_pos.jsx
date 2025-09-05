@@ -1,16 +1,18 @@
 import { useState, useEffect, useCallback } from 'react';
-
+import { v4 as uuidv4 } from 'uuid';
 import TimeOperator from '../../../../../lib/time';
 import LayautNovelty from '../../../../layaut/LayautPage';
 import TableFourCol from '../../../../table/table';
 import { pipeObjectTime, parserPipeOneObject, order } from '../../../../../lib/dataParser/dataForNovelty';
 import { chunkArr, chunkArray } from '../../../../../lib/dataParser/arr';
+import tranUrlToLocal from '../../../../../lib/fetching/transUrlLocal';
+import Image from '../../../../image_for_page/image';
 
 
 
 
 
-export default function TabletPos({ delay_data, dishItem, styles, returnImg, addCell, editCell }) {
+export default function TabletPos({ delay_data, dishItem, styles, editCell, returnImg }) {
 
 
     const [state, setState] = useState([]);
@@ -18,8 +20,30 @@ export default function TabletPos({ delay_data, dishItem, styles, returnImg, add
 
     useEffect(() => {
         setState(delay_data.delay);
-    }, []);
+    }, [delay_data]);
 
+
+
+
+    const addCell = (typeFood) => {
+        const row = {
+            _id: uuidv4(),
+            table: '0',
+            imageToShare: null,
+            createdAt: TimeOperator.returnTimeIso(),
+            nameDish: typeFood,
+            timePeriod: {
+                tomaOrden: '00:00:00',
+                listoTablet: '00:00:00',
+                listoCocina: '00:00:00',
+                EntregaPLato: '00:00:00',
+                timeTotal: null
+            }
+
+        };
+        const newArr = [...state, row];
+        editCell({ ...delay_data, delay: newArr }, delay_data.type);
+    };
 
 
 
@@ -34,19 +58,45 @@ export default function TabletPos({ delay_data, dishItem, styles, returnImg, add
 
 
     const deleteCell = (index, data) => {
-        const indexDelay = state.findIndex(item => item._id !== data._id);
-        editCell(indexDelay, delay_data.type)
+        const indexDelay = state.filter(item => item._id !== data._id);
+        editCell({ ...delay_data, delay: indexDelay }, delay_data.type);
     };
 
 
 
-    console.warn(
-        '%cDELAY%c →',
-        'background:#111;color:#7fffd4;padding:2px 6px;border-radius:4px;font-weight:600',
-        'color:#999;font-style:italic',
-        delay_data);
 
-    console.log(dishItem)
+
+
+
+
+
+
+    const getNewUrlImg = useCallback((file, delay) => {
+        console.log(delay);
+        sendImg(file)
+            .then(response => {
+                
+                /*
+                const newData = { ...dataParams.data };
+                newData.imageUrl[dataParams.index].url = response.data.urlFile;
+                */
+
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    }, []);
+
+
+
+
+
+
+
+
+
+
+
 
 
     return (
@@ -58,11 +108,13 @@ export default function TabletPos({ delay_data, dishItem, styles, returnImg, add
 
                     if (delatTypeOfDish.length > 0) {
 
+                        console.log(chunkArr(order(pipeObjectTime(delatTypeOfDish)), 10));
+
 
                         return (
                             <>
                                 {
-                                    chunkArr(order(pipeObjectTime(delatTypeOfDish)), 10).map(arr => (
+                                    chunkArray(order(pipeObjectTime(delatTypeOfDish)), 10).map((arr) => (
                                         arr.length === 0 ?
                                             null
                                             :
@@ -74,14 +126,13 @@ export default function TabletPos({ delay_data, dishItem, styles, returnImg, add
                                                 <div
                                                     className='w-[95%] h-[95%] p-[1rem] flex flex-col items-center justify-between gap-[1rem]'
                                                     onClick={() => pipeObjectTime(delatTypeOfDish)}
-
                                                 >
                                                     <TableFourCol
                                                         header={delay_data.header ?? []}
                                                         body={arr}
                                                         addRowProp={() => addCell(dish.nameDishe)}
                                                         editCellProp={updateCell}
-                                                        deleteRowProp={(index, delay) => deleteCell(delay._id)}
+                                                        deleteRowProp={(index, delay) => deleteCell(index, delay)}
                                                         styles={styles}
                                                     />
                                                     {
@@ -96,7 +147,7 @@ export default function TabletPos({ delay_data, dishItem, styles, returnImg, add
                                         chunkArr(order(delatTypeOfDish)).map(arr => (
                                             <LayautNovelty
                                                 namePage={`Demora en preparación de ${dish.nameDishe}`}
-                                                key={dish.nameDishe}
+                                                key={`${dish.nameDishe}-image`}
                                                 styles={styles}
                                                 children={{
                                                     callbackDelete: () => { },
@@ -113,7 +164,7 @@ export default function TabletPos({ delay_data, dishItem, styles, returnImg, add
                                                                 }}
                                                                 setSrc={tranUrlToLocal(image.imageToShare)}
                                                                 caption={`Mesa: ${image.table}`}
-                                                                getFile={data => getNewUrlImg(data, { delay: dish.nameDishe, data: image, id: image._id, index: index })}
+                                                                getFile={data => getNewUrlImg(data, delay)}
                                                                 boubleClickEvent={() => findNovelty(image._id)}
                                                             />
                                                         ))
@@ -127,7 +178,7 @@ export default function TabletPos({ delay_data, dishItem, styles, returnImg, add
                             </>
                         )
                     }
-                    return null;
+                    return <></>;
                 })
             }
         </>

@@ -78,7 +78,6 @@ export default memo(function AsideClonePage({ pages, pagesIds, addData, coundDoc
     const scrollSection = (id: string) => {
         const getId = id.split('#');
         const elementPage = document.getElementById(getId[1]);
-        console.log(elementPage)
         if (elementPage) {
             const timeOut = setTimeout(() => {
                 elementPage.scrollIntoView({

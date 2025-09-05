@@ -47,15 +47,18 @@ export default function Image({
         e.preventDefault();
         refSrc.current.classList.add('enterAdd');
     };
+    
 
     const handlerOnDragOver = e => {
         e.preventDefault();
     };
 
+
     const handlerOnLeave = e => {
         e.preventDefault();
         refSrc.current.classList.remove('enterAdd');
     };
+
 
 
     const handlerOnDrop = e => {
@@ -75,8 +78,7 @@ export default function Image({
                 };
 
                 fileReader.readAsDataURL(result);
-                fileReader.onload = setImg
-                fileReader = null;
+                fileReader.onload = setImg;
             }
         });
     };

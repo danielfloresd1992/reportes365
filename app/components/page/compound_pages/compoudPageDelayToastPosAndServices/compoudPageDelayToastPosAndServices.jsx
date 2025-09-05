@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+
 import { useState, useEffect, useRef, memo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import useFindArticle from '../../../../hook/find_to_asidebar';
@@ -87,6 +87,10 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
 
     const getNewUrlImg = useCallback((file, dataParams) => {
+        console.log(file);
+        console.log(dataParams);
+
+        /*
         sendImg(file)
             .then(response => {
 
@@ -103,6 +107,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
             .catch(error => {
                 console.log(error);
             })
+            */
     }, []);
 
 
@@ -155,17 +160,13 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
     // PUT COMPONENT ALL
     const editCell = useCallback((data, type) => {
-
         const getDelayCategory = getObjectByType(dataState, type);
         const dataForRequest = { ...dataState };
         dataForRequest[getDelayCategory.key] = data;
 
-        console.warn(dataForRequest);
-
         updateDataProp(dataForRequest, (data, error) => {
-
+            setDataState(dataForRequest);
         });
-
 
     }, [dataState]);
 
@@ -177,9 +178,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
         const found = Object.entries(obj).find(([key, value]) => {
             return value && typeof value === 'object' && value.type === typeValue;
         });
-
         if (!found) return null;
-
         const [key, value] = found;
         return { key, ...value }; // Incluye la clave y el contenido
     };
@@ -188,6 +187,8 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
 
     if (!establishmentStore || !dataState) return null;
+
+
 
 
 
@@ -250,6 +251,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                     styles,
                     config,
                     editCell
+
                 }}
             />
 
@@ -258,10 +260,10 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                 {...{
                     delay_data: dataState.delayToastPost,
                     dishItem,
-                    returnImg,
                     styles,
                     addCell,
-                    editCell
+                    editCell,
+                    returnImg
                 }}
             />
 
