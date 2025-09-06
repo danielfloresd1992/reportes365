@@ -7,8 +7,8 @@ import { pipeObjectTime, parserPipeOneObject, order } from '../../../../../lib/d
 import { chunkArr, chunkArray } from '../../../../../lib/dataParser/arr';
 import tranUrlToLocal from '../../../../../lib/fetching/transUrlLocal';
 import Image from '../../../../image_for_page/image';
-
-
+import ReturnImages from './image_to_single_image';
+import { sendImg } from '../../../../../lib/fetching/documents'
 
 
 
@@ -50,16 +50,16 @@ export default function TabletPos({ delay_data, dishItem, styles, editCell, retu
     const updateCell = (index, data) => {
         const parseData = parserPipeOneObject(data, true);
         const indexDelay = state.findIndex(item => item._id === data._id);
-        const nreArr = [...state];
-        nreArr[indexDelay] = parseData;
-        editCell({ ...delay_data, delay: nreArr }, delay_data.type);
+        const newArrDelau = [...state];
+        newArrDelau[indexDelay] = parseData;
+        editCell({ ...delay_data, delay: newArrDelau }, delay_data.type);
     };
 
 
 
     const deleteCell = (index, data) => {
-        const indexDelay = state.filter(item => item._id !== data._id);
-        editCell({ ...delay_data, delay: indexDelay }, delay_data.type);
+        const filterDelay = state.filter(item => item._id !== data._id);
+        editCell({ ...delay_data, delay: filterDelay }, delay_data.type);
     };
 
 
@@ -72,20 +72,28 @@ export default function TabletPos({ delay_data, dishItem, styles, editCell, retu
 
 
     const getNewUrlImg = useCallback((file, delay) => {
-        console.log(delay);
         sendImg(file)
             .then(response => {
-                
-                /*
-                const newData = { ...dataParams.data };
-                newData.imageUrl[dataParams.index].url = response.data.urlFile;
-                */
 
+                const findIndex = state.findIndex(delay => delay._id === delay._id);
+
+
+
+                const newArrDelay = [...state];
+                const newData = { ...delay };
+                newData.imageToShare = response.data.urlFile;
+
+                console.log(newData);
+
+                newArrDelay[findIndex] = newData;
+
+                console.log(newData);
+                editCell({ ...delay_data, delay: newArrDelay }, delay_data.type);
             })
             .catch(error => {
                 console.log(error);
-            })
-    }, []);
+            });
+    }, [state, delay_data]);
 
 
 
@@ -107,8 +115,6 @@ export default function TabletPos({ delay_data, dishItem, styles, editCell, retu
                     const delatTypeOfDish = Array.isArray(state) ? state.filter(delay => delay.nameDish === dish.nameDishe) : [];
 
                     if (delatTypeOfDish.length > 0) {
-
-                        console.log(chunkArr(order(pipeObjectTime(delatTypeOfDish)), 10));
 
 
                         return (
@@ -135,9 +141,11 @@ export default function TabletPos({ delay_data, dishItem, styles, editCell, retu
                                                         deleteRowProp={(index, delay) => deleteCell(index, delay)}
                                                         styles={styles}
                                                     />
-                                                    {
-                                                        returnImg(order(delatTypeOfDish), dish.nameDishe)
-                                                    }
+
+                                                    <ReturnImages
+                                                        {...{ delay: arr, typeFood: dish.nameDishe, getNewUrlImg }}
+                                                    />
+
                                                 </div>
                                             </LayautNovelty>
                                     ))

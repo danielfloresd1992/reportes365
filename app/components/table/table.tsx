@@ -5,6 +5,7 @@ import useFindArticle from '../../hook/find_to_asidebar';
 
 
 
+
 const TableFourCol = ({ header, body, addRowProp, deleteRowProp, editCellProp, orderTable, saveOrder, styles }: TableProp): ReactNode => {
 
     if (!header || !body || !Array.isArray(body)) return null;
@@ -14,7 +15,10 @@ const TableFourCol = ({ header, body, addRowProp, deleteRowProp, editCellProp, o
     const [styleRow, setStyleRow] = useState({ position: 'relative', height: dataState.length > 4 ? (dataState.length > 10 ? 'none' : '40px') : null });
     const { findNovelty } = useFindArticle();
 
+
+
     if (!body) return null;
+
 
 
     useEffect(() => {

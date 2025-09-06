@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useRef, memo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import useFindArticle from '../../../../hook/find_to_asidebar';
+
 import LayautPages from '../layautPages';
 import LayautNovelty from '../../../layaut/LayautPage';
 import HeaderPage from '../headerCompound';
@@ -17,14 +17,14 @@ import InputPasteEventReusable from '../../../inputs/inputPasteEventReusable';
 
 import TimeOperator from '../../../../lib/time';
 
-import tranUrlToLocal from '../../../../lib/fetching/transUrlLocal';
 
-import { sendImg } from '../../../../lib/fetching/documents'
+
+
 import icoGrafic from '../../../../../public/ico/ico_page_metric/icons8-gráfico-combinado-48.png';
 import icoReloj from '../../../../../public/ico/icons8-reloj-50.png';
 import icoProcess from '../../../../../public/ico/icons8-proceso-50.png';
 import icoAlert from '../../../../../public/ico/ico_page_metric/icons8-alerta-96.png';
-import Image from '../../../image_for_page/image';
+
 import alertIco from '../../../../../public/ico/icons8-alarma-50.png';
 import foodIco from '../../../../../public/ico/icons8-comida-64.png';
 
@@ -54,7 +54,6 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
     const [ImgesState, setImageState] = useState([]);
 
-    const { findNovelty } = useFindArticle();
 
 
 
@@ -114,34 +113,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
 
     const returnImg = (delay, typeFood) => {
-        if (delay.length > 3) return null;
-        const styleImg = {};
-        if (delay.length === 1) {
-            styleImg.width = '100%';
-            styleImg.height = '330px'
-        }
-        else if (delay.length === 2) styleImg.height = '300px';
-        else if (delay.length === 3) styleImg.height = '250px';
 
-        return (
-            <div className='flex justify-center items-center gap-4 w-full'>
-                {
-                    delay.sort((a, b) => TimeOperator.changueTimeMiliSecond(TimeOperator.calculateTime(b?.timePeriod?.init, b?.timePeriod?.end)) - TimeOperator.changueTimeMiliSecond(TimeOperator.calculateTime(a?.timePeriod?.init, a?.timePeriod?.end))).map((image, index) => (
-                        <Image
-                            item={index}
-                            style={styleImg}
-                            setSrc={tranUrlToLocal(image.imageToShare)}
-                            getFile={data => getNewUrlImg(data, { delay: typeFood, data: image, id: image._id })}
-                            index={index}
-                            arrowCordernate={false}
-                            caption={delay.length === 1 ? null : `Mesa: ${image.table}`}
-                            key={index}
-                            boubleClickEvent={() => findNovelty(image._id)}
-                        />
-                    ))
-                }
-            </div>
-        );
     };
 
 

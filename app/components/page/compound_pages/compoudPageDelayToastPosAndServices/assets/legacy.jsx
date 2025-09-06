@@ -11,7 +11,7 @@ import { chunkArr, chunkArray } from '../../../../../lib/dataParser/arr';
 
 
 
-export default function Legacy({ bodyState, returnImg, dishItem }) {
+export default function Legacy({ bodyState, dishItem }) {
 
 
 
@@ -101,6 +101,69 @@ export default function Legacy({ bodyState, returnImg, dishItem }) {
 
 
     console.log(bodyState);
+
+
+
+
+
+
+    const getNewUrlImg = useCallback((file, dataParams) => {
+        console.log(file);
+        console.log(dataParams);
+
+        /*
+        sendImg(file)
+            .then(response => {
+ 
+                if (dataParams.delay === 'delayDeliveryDishWhenItIsReadyInKitchen') {
+                    const newData = { ...dataParams.data };
+                    newData.imageUrl[dataParams.index].url = response.data.urlFile;
+                    editCell(dataParams.id, newData, 'delayDeliveryDishWhenItIsReadyInKitchen');
+                }
+                else {
+ 
+                    editCell(dataParams.id, { ...dataParams.data, imageToShare: response.data.urlFile }, dataParams.delay);
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            })
+            */
+    }, []);
+
+
+
+
+    const returnImg = (delay, typeFood) => {
+        if (delay.length > 3) return null;
+        const styleImg = {};
+        if (delay.length === 1) {
+            styleImg.width = '100%';
+            styleImg.height = '330px'
+        }
+        else if (delay.length === 2) styleImg.height = '300px';
+        else if (delay.length === 3) styleImg.height = '250px';
+
+        return (
+            <div className='flex justify-center items-center gap-4 w-full'>
+                {
+                    delay.sort((a, b) => TimeOperator.changueTimeMiliSecond(TimeOperator.calculateTime(b?.timePeriod?.init, b?.timePeriod?.end)) - TimeOperator.changueTimeMiliSecond(TimeOperator.calculateTime(a?.timePeriod?.init, a?.timePeriod?.end))).map((image, index) => (
+                        <Image
+                            item={index}
+                            style={styleImg}
+                            setSrc={tranUrlToLocal(image.imageToShare)}
+                            getFile={data => getNewUrlImg(data, { delay: typeFood, data: image, id: image._id })}
+                            index={index}
+                            arrowCordernate={false}
+                            caption={delay.length === 1 ? null : `Mesa: ${image.table}`}
+                            key={index}
+                            boubleClickEvent={() => findNovelty(image._id)}
+                        />
+                    ))
+                }
+            </div>
+        );
+    };
 
 
     return null;
