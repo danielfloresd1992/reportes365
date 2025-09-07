@@ -35,8 +35,6 @@ export default function Services({ delay_data, dishItem, styles, addCell, editCe
 
 
 
-    console.log(delay_data);
-
     return null;
 
 

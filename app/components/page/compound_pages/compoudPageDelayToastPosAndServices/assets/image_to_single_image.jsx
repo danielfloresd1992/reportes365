@@ -25,17 +25,17 @@ export default function ReturnImages({ delay, typeFood, getNewUrlImg }) {
     return (
         <div className='flex justify-center items-center gap-4 w-full'>
             {
-                delay.sort((a, b) => TimeOperator.changueTimeMiliSecond(TimeOperator.calculateTime(b?.timePeriod?.init, b?.timePeriod?.end)) - TimeOperator.changueTimeMiliSecond(TimeOperator.calculateTime(a?.timePeriod?.init, a?.timePeriod?.end))).map((image, index) => (
+                delay.sort((a, b) => TimeOperator.changueTimeMiliSecond(TimeOperator.calculateTime(b?.timePeriod?.init, b?.timePeriod?.end)) - TimeOperator.changueTimeMiliSecond(TimeOperator.calculateTime(a?.timePeriod?.init, a?.timePeriod?.end))).map((delay, index) => (
                     <Image
                         item={index}
                         style={styleImg}
-                        setSrc={tranUrlToLocal(image.imageToShare)}
-                        getFile={data => getNewUrlImg(data, { delay: typeFood, data: image, id: image._id })}
+                        setSrc={tranUrlToLocal(delay.imageToShare)}
+                        getFile={data => getNewUrlImg(data, delay)}
                         index={index}
                         arrowCordernate={false}
-                        caption={delay.length === 1 ? null : `Mesa: ${image.table}`}
+                        caption={delay.length === 1 ? null : `Mesa: ${delay.table}`}
                         key={index}
-                        boubleClickEvent={() => findNovelty(image._id)}
+                        boubleClickEvent={() => findNovelty(delay._id)}
                     />
                 ))
             }

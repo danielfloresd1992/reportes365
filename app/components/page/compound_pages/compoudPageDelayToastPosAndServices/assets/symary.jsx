@@ -4,7 +4,7 @@
 export default function Summary({ summary, dishItem, styles, config }) {
 
 
-    console.log(summary);
+
 
     return null;
 

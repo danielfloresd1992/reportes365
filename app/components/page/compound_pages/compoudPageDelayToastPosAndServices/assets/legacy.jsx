@@ -100,10 +100,6 @@ export default function Legacy({ bodyState, dishItem }) {
 
 
 
-    console.log(bodyState);
-
-
-
 
 
 

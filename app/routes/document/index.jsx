@@ -223,7 +223,7 @@ export default function Document() {
         if (id) {
             patchDocumentById(id, { pages: dataArr })
                 .then(response => {
-                    if (reder) setDataResponse({ ...documentDataResponse, pages: dataArr });
+                    if (reder) setDocumentState({ ...documentState, pages: dataArr });
                 })
                 .catch(error => console.log(error));
         }

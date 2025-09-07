@@ -65,43 +65,17 @@ export default function TabletPos({ delay_data, dishItem, styles, editCell, retu
 
 
 
-
-
-
-
-
-
     const getNewUrlImg = useCallback((file, delay) => {
         sendImg(file)
             .then(response => {
-
-                const findIndex = state.findIndex(delay => delay._id === delay._id);
-
-
-
-                const newArrDelay = [...state];
                 const newData = { ...delay };
                 newData.imageToShare = response.data.urlFile;
-
-                console.log(newData);
-
-                newArrDelay[findIndex] = newData;
-
-                console.log(newData);
-                editCell({ ...delay_data, delay: newArrDelay }, delay_data.type);
+                updateCell(null, newData);
             })
             .catch(error => {
                 console.log(error);
             });
     }, [state, delay_data]);
-
-
-
-
-
-
-
-
 
 
 
@@ -158,22 +132,23 @@ export default function TabletPos({ delay_data, dishItem, styles, editCell, retu
                                                 key={`${dish.nameDishe}-image`}
                                                 styles={styles}
                                                 children={{
-                                                    callbackDelete: () => { },
-                                                    deleteOnSwipe: true
+                                                    callbackDelete: null,
+                                                    deleteOnSwipe: false
                                                 }}
                                             >
                                                 <div className='w-full h-full flex justify-center items-center flex-wrap gap-[.5rem]'>
                                                     {
-                                                        arr.sort((a, b) => TimeOperator.changueTimeMiliSecond(TimeOperator.calculateTime(b.startTime || b?.timePeriod?.init, b.endTime || b?.timePeriod?.end)) - TimeOperator.changueTimeMiliSecond(TimeOperator.calculateTime(a.startTime || a?.timePeriod?.init, a.endTime || a?.timePeriod?.end))).map((image, index) => (
+                                                        arr.sort((a, b) => TimeOperator.changueTimeMiliSecond(TimeOperator.calculateTime(b.startTime || b?.timePeriod?.init, b.endTime || b?.timePeriod?.end)) - TimeOperator.changueTimeMiliSecond(TimeOperator.calculateTime(a.startTime || a?.timePeriod?.init, a.endTime || a?.timePeriod?.end))).map((delay, index) => (
                                                             <Image
                                                                 style={{
                                                                     width: '48%',
                                                                     height: '48%'
                                                                 }}
-                                                                setSrc={tranUrlToLocal(image.imageToShare)}
-                                                                caption={`Mesa: ${image.table}`}
+                                                                setSrc={tranUrlToLocal(delay.imageToShare)}
+                                                                caption={`Mesa: ${delay.table}`}
                                                                 getFile={data => getNewUrlImg(data, delay)}
-                                                                boubleClickEvent={() => findNovelty(image._id)}
+                                                                boubleClickEvent={() => findNovelty(delay._id)}
+                                                                key={delay._id}
                                                             />
                                                         ))
                                                     }
