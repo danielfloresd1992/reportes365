@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import TimeOperator from '../../../../../lib/time';
 import LayautNovelty from '../../../../layaut/LayautPage';
@@ -12,7 +12,7 @@ import { sendImg } from '../../../../../lib/fetching/documents'
 
 
 
-export default function TabletPos({ delay_data, dishItem, styles, editCell, returnImg }) {
+export default forwardRef(function TabletPos({ delay_data, dishItem, styles, editCell, returnImg }, ref) {
 
 
     const [state, setState] = useState([]);
@@ -43,7 +43,13 @@ export default function TabletPos({ delay_data, dishItem, styles, editCell, retu
         };
         const newArr = [...state, row];
         editCell({ ...delay_data, delay: newArr }, delay_data.type);
-    };
+    }
+
+
+
+    useImperativeHandle(ref, () => ({
+        addCell
+    }));
 
 
 
@@ -166,4 +172,4 @@ export default function TabletPos({ delay_data, dishItem, styles, editCell, retu
             }
         </>
     )
-}
+});

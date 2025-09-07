@@ -54,7 +54,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
     const [ImgesState, setImageState] = useState([]);
 
-
+    const toastRef = useRef(null);
 
 
     const dishItem = establishmentStore.dishes;
@@ -168,39 +168,49 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
     return (
         <LayautPages dataId={dataId}>
             <HeaderPage deletePage={() => deletePage(null, dataProp._id)} dataId={dataId}>
-                <div>
-                    <InputStandart
-                        type='select'
-                        textLabel='Entrega'
-                        setValue={(value) => { }}
-                        name='type-food'
-                        resectSelect={true}
-                    >
-                        {
-                            entriesNameState.length > 0 && entriesNameState.map(food => (
-                                <option value={food}>dempora en entrega de {food}</option>
-                            ))
-                        }
-                    </InputStandart>
+                <div className='w-full h-[100px] flex flex-col gap-[.5rem]'>
+                    <b className='text-center'>Legacy</b>
+                    <div className='w-full flex gap-[1rem]'>
+                        <div>
+                            <InputStandart
+                                type='select'
+                                textLabel='Entrega'
+                                setValue={(value) => { }}
+                                name='type-food'
+                                resectSelect={true}
+                            >
+                                {
+                                    entriesNameState.length > 0 && entriesNameState.map(food => (
+                                        <option value={food}>dempora en entrega de {food}</option>
+                                    ))
+                                }
+                            </InputStandart>
+                        </div>
+
+                        <div className=''>
+                            <InputStandart
+                                type='select'
+                                textLabel='Preparación'
+                                name='type-food'
+                                resectSelect={true}
+                                setValue={(name_plate) => {
+                                    console.log(name_plate, toastRef)
+                                    toastRef.current.addCell(name_plate);
+                                }}
+                                value='Sele'
+                            >
+                                {
+                                    entriesNameState.length > 0 && entriesNameState.map(food => (
+                                        <option value={food} key={food}>dempora en preparación de {food}</option>
+                                    ))
+                                }
+                            </InputStandart>
+
+                        </div>
+                    </div>
+                    <hr />
                 </div>
 
-                <div className=''>
-                    <InputStandart
-                        type='select'
-                        textLabel='Preparación'
-                        setValue={() => { }}
-                        name='type-food'
-                        resectSelect={true}
-                        value=''
-                    >
-                        {
-                            entriesNameState.length > 0 && entriesNameState.map(food => (
-                                <option value={food} key={food}>dempora en preparación de {food}</option>
-                            ))
-                        }
-                    </InputStandart>
-
-                </div>
             </HeaderPage>
 
 
@@ -237,6 +247,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                     editCell,
                     returnImg
                 }}
+                ref={toastRef}
             />
 
 

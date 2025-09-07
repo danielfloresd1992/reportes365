@@ -17,7 +17,7 @@ export default function HeaderPage({ deletePage, children }: Iprops): ReactNode 
 
     return (
         <header
-            className='h-[50px] bg-[#e5ebe9] w-full p-[0.5rem_1rem] rounded-t-lg flex items-center justify-between gap-[1.5rem]'
+            className='min-h-[50px] bg-[#e5ebe9] w-full p-[0.5rem_1rem] rounded-t-lg flex items-center justify-between gap-[1.5rem]'
 
             title='Subir o bajar'
         >
