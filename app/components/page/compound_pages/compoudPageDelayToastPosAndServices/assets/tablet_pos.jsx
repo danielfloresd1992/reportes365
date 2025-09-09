@@ -12,7 +12,7 @@ import { sendImg } from '../../../../../lib/fetching/documents'
 
 
 
-export default forwardRef(function TabletPos({ delay_data, dishItem, styles, editCell, returnImg }, ref) {
+export default forwardRef(function TabletPos({ delay_data, dishItem, styles, editCell }, ref) {
 
 
     const [state, setState] = useState([]);

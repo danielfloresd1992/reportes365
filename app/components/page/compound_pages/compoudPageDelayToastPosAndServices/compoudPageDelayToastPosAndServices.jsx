@@ -197,7 +197,6 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
             <Legacy
                 {...{
                     bodyState: dataState,
-                    returnImg,
                     dishItem,
                     styles,
                     establishmentStore
@@ -223,8 +222,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                     dishItem,
                     styles,
                     addCell,
-                    editCell,
-                    returnImg
+                    editCell
                 }}
                 ref={toastRef}
             />
