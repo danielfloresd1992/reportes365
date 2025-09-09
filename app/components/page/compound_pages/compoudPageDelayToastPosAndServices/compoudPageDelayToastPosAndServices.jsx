@@ -36,6 +36,9 @@ import TabletPos from './assets/tablet_pos';
 import DeliveyDelay from './assets/DelivryDishDelay';
 import Services from './assets/Services';
 
+import SelectDelay from './assets/select_delay';
+
+
 import { pipeObjectTime, parserPipeOneObject, order } from '../../../../lib/dataParser/dataForNovelty';
 import { downloadJSON } from '../../../../lib/debbuger/create_file';
 
@@ -168,47 +171,56 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
     return (
         <LayautPages dataId={dataId}>
             <HeaderPage deletePage={() => deletePage(null, dataProp._id)} dataId={dataId}>
-                <div className='w-full h-[100px] flex flex-col gap-[.5rem]'>
-                    <b className='text-center'>Legacy</b>
-                    <div className='w-full flex gap-[1rem]'>
-                        <div>
-                            <InputStandart
-                                type='select'
-                                textLabel='Entrega'
-                                setValue={(value) => { }}
-                                name='type-food'
-                                resectSelect={true}
-                            >
-                                {
-                                    entriesNameState.length > 0 && entriesNameState.map(food => (
-                                        <option value={food}>dempora en entrega de {food}</option>
-                                    ))
-                                }
-                            </InputStandart>
+
+                <div className='w-full flex flex-col'>
+                    <div className='w-full h-[100px] flex justify-center items-center flex-col gap-[.5rem]'>
+                        <b className='text-center'>Legacy</b>
+                        <div className='w-full flex gap-[1rem]'>
+                            <div>
+                                <InputStandart
+                                    type='select'
+                                    textLabel='Entrega'
+                                    setValue={(value) => { }}
+                                    name='type-food'
+                                    resectSelect={true}
+                                >
+                                    {
+                                        entriesNameState.length > 0 && entriesNameState.map(food => (
+                                            <option value={food}>dempora en entrega de {food}</option>
+                                        ))
+                                    }
+                                </InputStandart>
+                            </div>
+
+                            <div className=''>
+                                <InputStandart
+                                    type='select'
+                                    textLabel='Preparación'
+                                    name='type-food'
+                                    resectSelect={true}
+                                    setValue={(name_plate) => {
+                                        console.log(name_plate, toastRef)
+                                        toastRef.current.addCell(name_plate);
+                                    }}
+                                    value='Sele'
+                                >
+                                    {
+                                        entriesNameState.length > 0 && entriesNameState.map(food => (
+                                            <option value={food} key={food}>dempora en preparación de {food}</option>
+                                        ))
+                                    }
+                                </InputStandart>
+
+                            </div>
                         </div>
 
-                        <div className=''>
-                            <InputStandart
-                                type='select'
-                                textLabel='Preparación'
-                                name='type-food'
-                                resectSelect={true}
-                                setValue={(name_plate) => {
-                                    console.log(name_plate, toastRef)
-                                    toastRef.current.addCell(name_plate);
-                                }}
-                                value='Sele'
-                            >
-                                {
-                                    entriesNameState.length > 0 && entriesNameState.map(food => (
-                                        <option value={food} key={food}>dempora en preparación de {food}</option>
-                                    ))
-                                }
-                            </InputStandart>
-
-                        </div>
                     </div>
-                    <hr />
+
+                    <SelectDelay
+                        entriesArr={entriesNameState}
+                        getDelay={(category, name_food) => console.log(category, name_food)}
+                    />
+
                 </div>
 
             </HeaderPage>

@@ -25,19 +25,18 @@ export default function HeaderPage({ deletePage, children }: Iprops): ReactNode 
                 <img className='w-[35px]' src={icoGrabbingZone} alt='drag-zone-01' />
 
             </div>
-
+            {children}
             <div className='flex flex-row justify-center items-center gap-[1rem]'>
-                {children}
+
                 <button
                     onClick={deletePage}
                     type='button'
-                    title='Eliminar página'
+                    title='Eliminar seccion'
                     className='flex items-center justify-center gap-[.2rem]'>
-                    <img className='w-[20px]'
+                    <img className='w-[30px]'
                         src={deleteIco}
                         alt='delete-ico-page'
                     />
-                    Eliminar sección
                 </button>
             </div>
         </header>
