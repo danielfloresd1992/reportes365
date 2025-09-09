@@ -60,7 +60,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
     const toastRef = useRef(null);
 
 
-    const dishItem = establishmentStore.dishes;
+    const dishItem = establishmentStore?.dishes ?? [];
 
 
 
@@ -82,42 +82,6 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
         }
     }, [establishmentStore]);
 
-
-
-
-
-
-
-    const getNewUrlImg = useCallback((file, dataParams) => {
-        console.log(file);
-        console.log(dataParams);
-
-        /*
-        sendImg(file)
-            .then(response => {
-
-                if (dataParams.delay === 'delayDeliveryDishWhenItIsReadyInKitchen') {
-                    const newData = { ...dataParams.data };
-                    newData.imageUrl[dataParams.index].url = response.data.urlFile;
-                    editCell(dataParams.id, newData, 'delayDeliveryDishWhenItIsReadyInKitchen');
-                }
-                else {
-
-                    editCell(dataParams.id, { ...dataParams.data, imageToShare: response.data.urlFile }, dataParams.delay);
-                }
-            })
-            .catch(error => {
-                console.log(error);
-            })
-            */
-    }, []);
-
-
-
-
-    const returnImg = (delay, typeFood) => {
-
-    };
 
 
 
@@ -165,6 +129,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
 
 
+    console.log(toastRef)
 
 
 
@@ -216,9 +181,11 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
                     </div>
 
+                    <hr className='w-full border border-[#5f5f5f]' />
+
                     <SelectDelay
                         entriesArr={entriesNameState}
-                        getDelay={(category, name_food) => console.log(category, name_food)}
+                        toast={toastRef?.current?.addCell}
                     />
 
                 </div>
