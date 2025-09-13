@@ -9,6 +9,16 @@ import { pipeObjectTime, parserPipeOneObject, order } from '../../../../../lib/d
 import { chunkArr, chunkArray } from '../../../../../lib/dataParser/arr';
 
 
+/*
+import icoGrafic from '../../../../../public/ico/ico_page_metric/icons8-gráfico-combinado-48.png';
+import icoReloj from '../../../../../public/ico/icons8-reloj-50.png';
+import icoProcess from '../../../../../public/ico/icons8-proceso-50.png';
+import icoAlert from '../../../../../public/ico/ico_page_metric/icons8-alerta-96.png';
+
+import alertIco from '../../../../../public/ico/icons8-alarma-50.png';
+import foodIco from '../../../../../public/ico/icons8-comida-64.png';
+*/
+
 
 
 export default function Legacy({ bodyState, dishItem }) {

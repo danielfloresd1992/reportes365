@@ -1,32 +1,18 @@
 
 import { useState, useEffect, useRef, memo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-
 import LayautPages from '../layautPages';
-import LayautNovelty from '../../../layaut/LayautPage';
+
 import HeaderPage from '../headerCompound';
 import FooterPage from '../footerCompound';
-import Title from '../../TitleContent';
-import InputTitle from '../../../inputs/inputTitle';
+
+
 import InputStandart from '../../../inputs/input_standart';
-import InputPasteEventReusable from '../../../inputs/inputPasteEventReusable';
 
 
 
 
 
-import TimeOperator from '../../../../lib/time';
-
-
-
-
-import icoGrafic from '../../../../../public/ico/ico_page_metric/icons8-gráfico-combinado-48.png';
-import icoReloj from '../../../../../public/ico/icons8-reloj-50.png';
-import icoProcess from '../../../../../public/ico/icons8-proceso-50.png';
-import icoAlert from '../../../../../public/ico/ico_page_metric/icons8-alerta-96.png';
-
-import alertIco from '../../../../../public/ico/icons8-alarma-50.png';
-import foodIco from '../../../../../public/ico/icons8-comida-64.png';
 
 
 import Legacy from './assets/legacy';
@@ -57,7 +43,10 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
     const [ImgesState, setImageState] = useState([]);
 
+    const legacyRef = useRef(null);
     const toastRef = useRef(null);
+    const deliveryRef = useRef(null);
+    const servicesRef = useRef(null);
 
 
     const dishItem = establishmentStore?.dishes ?? [];
@@ -67,6 +56,10 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
     useEffect(() => {
         setDataState({ ...dataProp.data });
     }, []);
+
+
+
+    console.log(legacyRef);
 
 
 
@@ -84,15 +77,6 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
 
 
-
-
-    // ADD LIST ALL
-    const addCell = useCallback((data, type) => {
-        console.log(type);
-
-        if (typeof callback === 'function') callback();
-
-    }, []);
 
 
 
@@ -129,7 +113,6 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
 
 
-    console.log(toastRef)
 
 
 
@@ -185,11 +168,12 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
                     <SelectDelay
                         entriesArr={entriesNameState}
-                        toast={toastRef?.current?.addCell}
+                        toast={toastRef?.current}
+                        delivery={deliveryRef}
+                        services={servicesRef}
                     />
 
                 </div>
-
             </HeaderPage>
 
 
@@ -199,8 +183,9 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                     bodyState: dataState,
                     dishItem,
                     styles,
-                    establishmentStore
+                    entriesNameState
                 }}
+                ref={legacyRef}
             />
 
 
@@ -211,17 +196,16 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                     styles,
                     config,
                     editCell
-
                 }}
             />
 
 
             <TabletPos
+                state={dataState.delayToastPost}
                 {...{
-                    delay_data: dataState.delayToastPost,
+                    establishmentStore,
                     dishItem,
                     styles,
-                    addCell,
                     editCell
                 }}
                 ref={toastRef}
@@ -233,7 +217,9 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                     delay_data: dataState.delayDeliveryDishWhenItIsReadyInKitchen,
                     dishItem,
                     styles,
+                    editCell
                 }}
+                ref={deliveryRef}
             />
 
 
@@ -242,9 +228,9 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                     delay_data: dataState.delayServices,
                     dishItem,
                     styles,
-                    addCell,
-                    editCell,
+                    editCell
                 }}
+                ref={servicesRef}
             />
 
 

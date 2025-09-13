@@ -174,6 +174,5 @@ export type DelayToastPostAndServise = {
             type: string
         }
 
-
     }
 };

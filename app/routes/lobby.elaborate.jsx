@@ -146,16 +146,15 @@ function Elaborate() {
                 <div className=' relative w-full flex justify-center items-center flex-wrap gap-[2rem] p-[3rem]'>
                     {
                         groupEstablishmentsState && Object.keys(groupEstablishmentsState).map((franchise, index) => (
-                            <div className='w-full flex justify-center flex-col gap-[2rem]' key={index}>
+
+                            <div className='w-full flex justify-center flex-col gap-[2rem]' key={franchise}>
                                 <p className='text-center' style={{ fontSize: '1.3rem' }}>{franchise}</p>
                                 <hr />
                                 <div>
                                     <div className='flex items-start justify-center gap-[2rem] flex-wrap'>
                                         {
                                             groupEstablishmentsState[franchise].map(establishment => (
-                                                <>
-                                                    <Cover establishment={establishment} seleted={seletedEstablishment} key={establishment._id} />
-                                                </>
+                                                <Cover establishment={establishment} seleted={seletedEstablishment} key={establishment._id} />
                                             ))
                                         }
                                         <IcoResumeShift nameFranchise={franchise} seleted={seletedFranchise} />

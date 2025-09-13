@@ -1,7 +1,7 @@
 
 
 
-export default function Summary({ summary, dishItem, styles, config }) {
+export default function Summary({ summary, dishItem, styles, config, editCell }) {
 
 
 

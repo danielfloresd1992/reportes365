@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react';
+import { useCallback, forwardRef, useImperativeHandle } from 'react';
+import SelectDelay from '../assets/select_delay';
 import { v4 as uuidv4 } from 'uuid';
 import TimeOperator from '../../../../../lib/time';
 import LayautNovelty from '../../../../layaut/LayautPage';
@@ -8,24 +9,19 @@ import { chunkArr, chunkArray } from '../../../../../lib/dataParser/arr';
 import tranUrlToLocal from '../../../../../lib/fetching/transUrlLocal';
 import Image from '../../../../image_for_page/image';
 import ReturnImages from './image_to_single_image';
-import { sendImg } from '../../../../../lib/fetching/documents'
+import { sendImg } from '../../../../../lib/fetching/documents';
 
 
 
-export default forwardRef(function TabletPos({ delay_data, dishItem, styles, editCell }, ref) {
-
-
-    const [state, setState] = useState([]);
-
-
-    useEffect(() => {
-        setState(delay_data.delay);
-    }, [delay_data]);
+export default forwardRef(function TabletPos({ state, dishItem, styles, editCell, entriesNameState }, ref) {
 
 
 
 
-    const addCell = (typeFood) => {
+
+
+    const addCell = useCallback((typeFood, delay) => {
+        alert(typeFood);
         const row = {
             _id: uuidv4(),
             table: '0',
@@ -41,15 +37,21 @@ export default forwardRef(function TabletPos({ delay_data, dishItem, styles, edi
             }
 
         };
-        const newArr = [...state, row];
-        editCell({ ...delay_data, delay: newArr }, delay_data.type);
-    }
+        const newArr = [...delay, row];
+        console.log(newArr.filter(delay => delay.nameDish === 'appetizer'));
+        editCell({ ...state, delay: newArr }, state.type);
+
+    }, [state]);
+
+
 
 
 
     useImperativeHandle(ref, () => ({
-        addCell
-    }));
+        addCell,
+        arrDelay: state?.delay
+    }), [state]);
+
 
 
 
@@ -58,14 +60,15 @@ export default forwardRef(function TabletPos({ delay_data, dishItem, styles, edi
         const indexDelay = state.findIndex(item => item._id === data._id);
         const newArrDelau = [...state];
         newArrDelau[indexDelay] = parseData;
-        editCell({ ...delay_data, delay: newArrDelau }, delay_data.type);
+        editCell({ ...state, delay: newArrDelau }, state.type);
     };
 
 
 
+
     const deleteCell = (index, data) => {
-        const filterDelay = state.filter(item => item._id !== data._id);
-        editCell({ ...delay_data, delay: filterDelay }, delay_data.type);
+        const filterDelay = state.delay.filter(item => item._id !== data._id);
+        editCell({ ...state, delay: filterDelay }, state.type);
     };
 
 
@@ -81,18 +84,23 @@ export default forwardRef(function TabletPos({ delay_data, dishItem, styles, edi
             .catch(error => {
                 console.log(error);
             });
-    }, [state, delay_data]);
+    }, [state]);
+
 
 
 
 
 
     return (
-        <>
+        <div className='w-full min-h-[600px]'>
+            <SelectDelay
+                add={addCell}
+                entriesArr={entriesNameState}
+            />
             {
                 dishItem.map((dish) => {
 
-                    const delatTypeOfDish = Array.isArray(state) ? state.filter(delay => delay.nameDish === dish.nameDishe) : [];
+                    const delatTypeOfDish = Array.isArray(state.delay) ? state.delay.filter(delay => delay.nameDish === dish.nameDishe) : [];
 
                     if (delatTypeOfDish.length > 0) {
 
@@ -114,9 +122,9 @@ export default forwardRef(function TabletPos({ delay_data, dishItem, styles, edi
                                                     onClick={() => pipeObjectTime(delatTypeOfDish)}
                                                 >
                                                     <TableFourCol
-                                                        header={delay_data.header ?? []}
+                                                        header={state.header ?? []}
                                                         body={arr}
-                                                        addRowProp={() => addCell(dish.nameDishe)}
+                                                        addRowProp={() => addCell(dish.nameDishe, state.delay)}
                                                         editCellProp={updateCell}
                                                         deleteRowProp={(index, delay) => deleteCell(index, delay)}
                                                         styles={styles}
@@ -132,10 +140,10 @@ export default forwardRef(function TabletPos({ delay_data, dishItem, styles, edi
                                 }
                                 {
                                     delatTypeOfDish.length > 3 ?
-                                        chunkArr(order(delatTypeOfDish)).map(arr => (
+                                        chunkArr(order(delatTypeOfDish)).map((arr, index) => (
                                             <LayautNovelty
                                                 namePage={`Demora en preparación de ${dish.nameDishe}`}
-                                                key={`${dish.nameDishe}-image`}
+                                                key={`${uuidv4()}-image`}
                                                 styles={styles}
                                                 children={{
                                                     callbackDelete: null,
@@ -167,9 +175,9 @@ export default forwardRef(function TabletPos({ delay_data, dishItem, styles, edi
                             </>
                         )
                     }
-                    return <></>;
+                    return null;
                 })
             }
-        </>
+        </div>
     )
 });

@@ -7,7 +7,7 @@ import TableFourCol from '../../../../table/table';
 
 
 
-export default function Services({ delay_data, dishItem, styles, addCell, editCell, deleteCell, }) {
+export default function Services({ delay_data, dishItem, styles, editCell }) {
 
 
 

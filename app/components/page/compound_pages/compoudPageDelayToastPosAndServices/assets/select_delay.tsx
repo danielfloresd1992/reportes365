@@ -2,11 +2,18 @@ import { useState } from 'react';
 
 
 
+type Props = {
+    entriesArr: [],
+    toast: () => void
+}
 
-export default function SelectDelay({ entriesArr, toast }: any): JSX.Element {
+
+
+export default function SelectDelay({ entriesArr = [], add }: any): JSX.Element {
 
 
     const [dishName, setDishName] = useState<string>('');
+
 
 
     return (
@@ -17,7 +24,9 @@ export default function SelectDelay({ entriesArr, toast }: any): JSX.Element {
                     <select
                         className='border border-[#5f5f5f] p-[0.2rem_1rem] rounded-[0.4rem] text-[#5f5f5f]'
                         name='name_food'
-                        onChange={(e) => setDishName(e.target.value)}
+                        onChange={(e) => {
+                            setDishName(e.target.value)
+                        }}
                     >
                         <option value=''>Seleccione</option>
                         {
@@ -31,7 +40,9 @@ export default function SelectDelay({ entriesArr, toast }: any): JSX.Element {
                     <button
                         className='border border-[red] p-[0.2rem_1rem] rounded-[0.4rem] text-[#5f5f5f]'
                         type='button'
-                        onClick={() => toast(dishName)}
+                        onClick={() => {
+                            add(dishName);
+                        }}
                         disabled={dishName === '' ? true : false}
                     >Toast Pos</button>
                 </div>

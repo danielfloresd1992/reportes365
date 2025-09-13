@@ -1,6 +1,6 @@
 
 
-export default function DeliveyDelay({ delay_data, dishItem, styles, addCell, editCell, deleteCell, }) {
+export default function DeliveyDelay({ delay_data, dishItem, styles, editCell }) {
 
 
 
