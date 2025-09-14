@@ -47,7 +47,7 @@ export default function Image({
         e.preventDefault();
         refSrc.current.classList.add('enterAdd');
     };
-    
+
 
     const handlerOnDragOver = e => {
         e.preventDefault();

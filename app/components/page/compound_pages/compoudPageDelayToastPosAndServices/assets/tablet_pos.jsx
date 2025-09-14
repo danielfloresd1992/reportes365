@@ -1,27 +1,26 @@
-import { useCallback, forwardRef, useImperativeHandle } from 'react';
-import SelectDelay from '../assets/select_delay';
+import { useCallback } from 'react';
+import SectionForDelay from './section_for_delay/section';
 import { v4 as uuidv4 } from 'uuid';
 import TimeOperator from '../../../../../lib/time';
+import { chunkArr, chunkArray } from '../../../../../lib/dataParser/arr';
+import tranUrlToLocal from '../../../../../lib/fetching/transUrlLocal';
+
 import LayautNovelty from '../../../../layaut/LayautPage';
 import TableFourCol from '../../../../table/table';
 import { pipeObjectTime, parserPipeOneObject, order } from '../../../../../lib/dataParser/dataForNovelty';
-import { chunkArr, chunkArray } from '../../../../../lib/dataParser/arr';
-import tranUrlToLocal from '../../../../../lib/fetching/transUrlLocal';
+
 import Image from '../../../../image_for_page/image';
 import ReturnImages from './image_to_single_image';
 import { sendImg } from '../../../../../lib/fetching/documents';
 
 
 
-export default forwardRef(function TabletPos({ state, dishItem, styles, editCell, entriesNameState }, ref) {
+export default function TabletPos({ state, dishItem, styles, editCell }) {
 
 
 
 
-
-
-    const addCell = useCallback((typeFood, delay) => {
-        alert(typeFood);
+    const addCell = useCallback((typeFood) => {
         const row = {
             _id: uuidv4(),
             table: '0',
@@ -37,8 +36,7 @@ export default forwardRef(function TabletPos({ state, dishItem, styles, editCell
             }
 
         };
-        const newArr = [...delay, row];
-        console.log(newArr.filter(delay => delay.nameDish === 'appetizer'));
+        const newArr = [...state.delay, row];
         editCell({ ...state, delay: newArr }, state.type);
 
     }, [state]);
@@ -47,18 +45,10 @@ export default forwardRef(function TabletPos({ state, dishItem, styles, editCell
 
 
 
-    useImperativeHandle(ref, () => ({
-        addCell,
-        arrDelay: state?.delay
-    }), [state]);
-
-
-
-
     const updateCell = (index, data) => {
         const parseData = parserPipeOneObject(data, true);
-        const indexDelay = state.findIndex(item => item._id === data._id);
-        const newArrDelau = [...state];
+        const indexDelay = state.delay.findIndex(item => item._id === data._id);
+        const newArrDelau = [...state.delay];
         newArrDelau[indexDelay] = parseData;
         editCell({ ...state, delay: newArrDelau }, state.type);
     };
@@ -92,11 +82,12 @@ export default forwardRef(function TabletPos({ state, dishItem, styles, editCell
 
 
     return (
-        <div className='w-full min-h-[600px]'>
-            <SelectDelay
-                add={addCell}
-                entriesArr={entriesNameState}
-            />
+
+        <SectionForDelay
+            title='Toast POS'
+            add={addCell}
+            dishItem={dishItem}
+        >
             {
                 dishItem.map((dish) => {
 
@@ -178,6 +169,6 @@ export default forwardRef(function TabletPos({ state, dishItem, styles, editCell
                     return null;
                 })
             }
-        </div>
-    )
-});
+        </SectionForDelay>
+    );
+};

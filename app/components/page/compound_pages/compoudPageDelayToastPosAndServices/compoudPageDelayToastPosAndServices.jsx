@@ -22,7 +22,7 @@ import TabletPos from './assets/tablet_pos';
 import DeliveyDelay from './assets/DelivryDishDelay';
 import Services from './assets/Services';
 
-import SelectDelay from './assets/select_delay';
+import SelectDelay from './assets/section_for_delay/select_delay';
 
 
 import { pipeObjectTime, parserPipeOneObject, order } from '../../../../lib/dataParser/dataForNovelty';
@@ -41,7 +41,6 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
     const [entriesNameState, setEntriesNameState] = useState([]);
 
-    const [ImgesState, setImageState] = useState([]);
 
     const legacyRef = useRef(null);
     const toastRef = useRef(null);
@@ -59,7 +58,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
 
 
-    console.log(legacyRef);
+
 
 
 
@@ -121,7 +120,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
             <HeaderPage deletePage={() => deletePage(null, dataProp._id)} dataId={dataId}>
 
                 <div className='w-full flex flex-col'>
-                    <div className='w-full h-[100px] flex justify-center items-center flex-col gap-[.5rem]'>
+                    <div className='w-full flex justify-center items-center flex-col gap-[.5rem]'>
                         <b className='text-center'>Legacy</b>
                         <div className='w-full flex gap-[1rem]'>
                             <div>
@@ -147,7 +146,6 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                                     name='type-food'
                                     resectSelect={true}
                                     setValue={(name_plate) => {
-                                        console.log(name_plate, toastRef)
                                         toastRef.current.addCell(name_plate);
                                     }}
                                     value='Sele'
@@ -163,15 +161,6 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                         </div>
 
                     </div>
-
-                    <hr className='w-full border border-[#5f5f5f]' />
-
-                    <SelectDelay
-                        entriesArr={entriesNameState}
-                        toast={toastRef?.current}
-                        delivery={deliveryRef}
-                        services={servicesRef}
-                    />
 
                 </div>
             </HeaderPage>
@@ -208,7 +197,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                     styles,
                     editCell
                 }}
-                ref={toastRef}
+
             />
 
 
@@ -219,7 +208,6 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                     styles,
                     editCell
                 }}
-                ref={deliveryRef}
             />
 
 
