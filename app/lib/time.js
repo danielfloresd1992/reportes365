@@ -139,6 +139,7 @@ export default class TimeOperator {
 
 
     static changueTimeMiliSecond = (time) => { // in 00:00:00 output milisecound
+        if (!time) return null;
         const [h, m, s] = time.split(":").map(Number);
         return h * 3600 + m * 60 + s; // Operador corregido aquí
     };

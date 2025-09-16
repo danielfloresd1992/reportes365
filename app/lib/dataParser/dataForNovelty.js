@@ -26,7 +26,6 @@ export const pipeObjectTime = (data, invert) => {
 
 
 export const parserPipeOneObject = (data, invert) => {
-    if (!data) return null;
     const delay = { ...data };
     if (delay.timePeriod && invert) {
         delay.timePeriod.tomaOrden = delay.timePeriod.init;

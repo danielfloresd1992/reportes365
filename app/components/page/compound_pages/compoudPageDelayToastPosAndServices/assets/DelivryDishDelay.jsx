@@ -14,6 +14,7 @@ import Image from '../../../../image_for_page/image';
 
 
 
+
 export default function DeliveyDelay({ delay_data, dishItem, styles, editCell }) {
 
 

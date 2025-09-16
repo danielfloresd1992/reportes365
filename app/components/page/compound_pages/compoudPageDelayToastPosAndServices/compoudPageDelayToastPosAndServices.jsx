@@ -59,9 +59,6 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
 
 
-
-
-
     useEffect(() => {
         if (establishmentStore) {
             if (establishmentStore.dishes.length > 0) {

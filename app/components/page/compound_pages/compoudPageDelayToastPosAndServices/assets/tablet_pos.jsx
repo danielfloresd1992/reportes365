@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import SectionForDelay from './section_for_delay/section';
+
 import { v4 as uuidv4 } from 'uuid';
 import TimeOperator from '../../../../../lib/time';
 import { chunkArr, chunkArray } from '../../../../../lib/dataParser/arr';
@@ -9,6 +9,7 @@ import LayautNovelty from '../../../../layaut/LayautPage';
 import TableFourCol from '../../../../table/table';
 import { pipeObjectTime, parserPipeOneObject, order } from '../../../../../lib/dataParser/dataForNovelty';
 
+import SectionForDelay from './section_for_delay/section';
 import Image from '../../../../image_for_page/image';
 import ReturnImages from './image_to_single_image';
 import { sendImg } from '../../../../../lib/fetching/documents';
@@ -94,7 +95,6 @@ export default function TabletPos({ state, dishItem, styles, editCell }) {
                     const delatTypeOfDish = Array.isArray(state.delay) ? state.delay.filter(delay => delay.nameDish === dish.nameDishe) : [];
 
                     if (delatTypeOfDish.length > 0) {
-
 
                         return (
                             <>
