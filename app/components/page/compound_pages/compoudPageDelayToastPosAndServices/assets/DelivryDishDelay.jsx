@@ -133,8 +133,6 @@ export default function DeliveyDelay({ delay_data, dishItem, styles, editCell })
                                 {
                                     delayDelivery.imageUrl.map((imgObject, indexImage) => {
 
-                                        console.log(imgObject);
-
                                         return (
                                             <Image
                                                 key={imgObject._id}

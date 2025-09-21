@@ -7,14 +7,16 @@ export const pipeObjectTime = (data, invert) => {
     if (!data) return null;
     const returnArr = [];
 
+    console.log(data)
+
     data.forEach(delay => {
         if (invert) {
-            delay.timePeriod.tomaOrden = delay.timePeriod.init;
-            delay.timePeriod.listoTablet = delay.timePeriod.end;
+            if (delay.timePeriod.init) delay.timePeriod.tomaOrden = delay.timePeriod.init;
+            if (delay.timePeriod.end) delay.timePeriod.listoTablet = delay.timePeriod.end;
         }
         else {
-            delay.timePeriod.init = delay.timePeriod.tomaOrden;
-            delay.timePeriod.end = delay.timePeriod.listoTablet;
+            if (delay.timePeriod.tomaOrden) delay.timePeriod.init = delay.timePeriod.tomaOrden;
+            if (delay.timePeriod.listoTablet) delay.timePeriod.end = delay.timePeriod.listoTablet;
         }
 
         returnArr.push(delay);
