@@ -117,7 +117,7 @@ export default function pageTabletDelayTwoImage({
                                         styles={styles}
                                         getFile={(data) => { updateImage(0, data, arr[0]) }}
                                         arrowCordernate={true}
-                                        setCoordinates={Array.isArray(arr[0].coordinates) ? arr[0].coordinates[1] : null}
+                                        setCoordinates={Array.isArray(arr[0].coordinates) ? arr[0].coordinates[0] : null}
                                         saveCordenate={(data) => { saveCoordinate(data, 0, arr[0]) }}
                                         index={0}
                                     />
@@ -125,7 +125,7 @@ export default function pageTabletDelayTwoImage({
                                         h_full={true}
                                         full={true}
                                         caption={captioEnd}
-                                        setSrc={Array.isArray(arr?.imageUrl) ? tranUrlToLocal(arr?.body[0].imageUrl[1].url) : null}
+                                        setSrc={Array.isArray(arr[0].imageUrl) ? tranUrlToLocal(arr[0].imageUrl[1].url) : null}
                                         styles={styles}
                                         getFile={(data) => { updateImage(1, data, arr[0]) }}
                                         arrowCordernate={true}

@@ -79,14 +79,25 @@ export default function Services({ delay_data, dishItem, styles, editCell, }) {
                     const delatTypeOfDish = delay_data.delay.filter(delay => delay.nameDish === dish.nameDishe);
                     if (delatTypeOfDish.length === 0) return null;
                     const dataOrder = order(delatTypeOfDish)
-                    const titleHeadPage = `Mesa con maryor demora en recibir servicio de ${dish.nameDishe}`;
+
+
+
+                    const titleHeadPage = dish.requiresTableNumber ?
+                        `Mesa con maryor demora en recibir servicio de ${dish.nameDishe}`
+                        :
+                        `Demora con mayor tiempo en recibir servicio de ${dish.nameDishe}`;
+
                     const titlePage = `${dish.requiresTableNumber ? `Mesa: ${dataOrder[0].table} ` : ''}(Desde: ${dataOrder[0].timePeriod.init} - Hasta: ${dataOrder[0].timePeriod.end}) Duración: ${TimeOperator.calculateTime(dataOrder[0].timePeriod.init, dataOrder[0].timePeriod.end)}`;
                     const captioInit = 'Toma de orden';
                     const captioEnd = `Entrega de ${dish.nameDishe}`;
 
 
 
-                    const titleForTable = `${delatTypeOfDish.length > 1 ? 'Mesas' : 'Mesa'} con demora superior a ${TimeOperator.timePeriod(dish?.timeLimit?.day ?? '00:00:00')} para recibir servicio de ${dish.nameDishe}`;
+                    const titleForTable = dish.requiresTableNumber ?
+                        `${delatTypeOfDish.length > 1 ? 'Mesas' : 'Mesa'} con demora superior a ${TimeOperator.timePeriod(dish?.timeLimit?.day ?? '00:00:00')} para recibir servicio de ${dish.nameDishe}`
+                        :
+                        `demora superior a ${TimeOperator.timePeriod(dish?.timeLimit?.day ?? '00:00:00')} para recibir servicio de ${dish.nameDishe}`;
+
 
                     return (
                         <>
