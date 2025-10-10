@@ -91,7 +91,7 @@ export default function TabletPos({ state, dishItem, styles, editCell }) {
         >
             {
                 dishItem.map((dish) => {
-
+                    if (!state?.delay) return null;
                     const delatTypeOfDish = Array.isArray(state.delay) ? state.delay.filter(delay => delay.nameDish === dish.nameDishe) : [];
 
                     if (delatTypeOfDish.length > 0) {

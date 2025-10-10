@@ -1,34 +1,78 @@
 import { v4 as uuidv4 } from 'uuid';
 import { useState, useEffect, useRef, memo, useCallback } from 'react';
-
+import { useSelector } from 'react-redux';
+import useFindArticle from '../../../../../hook/find_to_asidebar';
+import LayautPages from '../../layautPages';
 import LayautNovelty from '../../../../layaut/LayautPage';
-import TabletLayaut from '../../../../table/table_layaut';
-import TableFourCol from '../../../../table/table';
+import HeaderPage from '../../headerCompound';
+import FooterPage from '../../footerCompound';
+import Title from '../../../TitleContent';
+import InputTitle from '@/components/inputs/inputTitle';
+import InputStandart from '@/components/inputs/input_standart';
+import InputPasteEventReusable from '@/components/inputs/inputPasteEventReusable';
+import TableFourCol from '@/components/table/table';
 
-import { pipeObjectTime, parserPipeOneObject, order } from '../../../../../lib/dataParser/dataForNovelty';
-import { chunkArr, chunkArray } from '../../../../../lib/dataParser/arr';
-
-
-/*
-import icoGrafic from '../../../../../public/ico/ico_page_metric/icons8-gráfico-combinado-48.png';
-import icoReloj from '../../../../../public/ico/icons8-reloj-50.png';
-import icoProcess from '../../../../../public/ico/icons8-proceso-50.png';
-import icoAlert from '../../../../../public/ico/ico_page_metric/icons8-alerta-96.png';
-
-import alertIco from '../../../../../public/ico/icons8-alarma-50.png';
-import foodIco from '../../../../../public/ico/icons8-comida-64.png';
-*/
+import TabletLayaut from '@/components/table/table_layaut';
 
 
+import TimeOperator from '@/lib/time';
 
-export default function Legacy({ bodyState, dishItem }) {
+import tranUrlToLocal from '@/lib/fetching/transUrlLocal';
+import { chunkArray } from '@/lib/./dataParser/arr';
+import { sendImg } from '@/lib/fetching/documents'
+import icoGrafic from '../../../../../../public/ico/ico_page_metric/icons8-gráfico-combinado-48.png';
+import icoReloj from '../../../../../../public/ico/icons8-reloj-50.png';
+import icoProcess from '../../../../../../public/ico/icons8-proceso-50.png';
+import icoAlert from '../../../../../../public/ico/ico_page_metric/icons8-alerta-96.png';
+import Image from '../../../../image_for_page/image';
+import alertIco from '../../../../../../public/ico/icons8-alarma-50.png';
+import foodIco from '../../../../../../public/ico/icons8-comida-64.png';
 
 
+
+
+export default function Legacy({ dataProp: dataState,
+    dataProp,
+    dishItem,
+    styles,
+    config,
+    dataId }) {
+
+
+
+    const establishmentStore = useSelector(store => store.establishmentDocument);
+    const [bodyState, setBodyState] = useState(null);
+    const [entriesNameState, setEntriesNameState] = useState([]);
+    const [ImgesState, setImageState] = useState([]);
+    const { findNovelty } = useFindArticle();
 
     const styleCellBorder = 'border border-black text-lg';
     const styleCellBorderR = 'text-center border-r border-r-solid border-r-black';
     const styleCell = 'text-center w-1/3';
     const fontSizes = { fontSize: '1.2rem' };
+
+
+
+
+
+    useEffect(() => {
+        setBodyState({ ...dataProp.body });
+    }, [])
+
+
+
+    useEffect(() => {
+        if (establishmentStore) {
+            if (establishmentStore.dishes.length > 0) {
+                setEntriesNameState(establishmentStore.dishes.map(dish => dish.nameDishe))
+            }
+            else {
+                setEntriesNameState([establishmentStore.dishMenu.appetizer, establishmentStore.dishMenu.mainDish, establishmentStore.dishMenu.dessert]);
+
+            }
+        }
+    }, [establishmentStore]);
+
 
 
 
@@ -48,6 +92,42 @@ export default function Legacy({ bodyState, dishItem }) {
         };
     };
 
+
+
+    const pipeObjectTime = (data, invert) => {
+        if (!data) return null;
+        const returnArr = [];
+
+        data.forEach(delay => {
+            if (invert) {
+                delay.timePeriod.tomaOrden = delay.timePeriod.init;
+                delay.timePeriod.listoTablet = delay.timePeriod.end;
+            }
+            else {
+                delay.timePeriod.init = delay.timePeriod.tomaOrden;
+                delay.timePeriod.end = delay.timePeriod.listoTablet;
+            }
+
+            returnArr.push(delay);
+        });
+        return returnArr;
+    };
+
+
+
+    const parserPipeOneObject = (data, invert) => {
+        if (!data) return null;
+        const delay = { ...data };
+        if (delay.timePeriod && invert) {
+            delay.timePeriod.tomaOrden = delay.timePeriod.init;
+            delay.timePeriod.listoTablet = delay.timePeriod.end;
+        }
+        else if (delay.timePeriod) {
+            delay.timePeriod.init = delay.timePeriod.tomaOrden;
+            delay.timePeriod.end = delay.timesPeriod.listoTablet;
+        }
+        return delay;
+    };
 
 
 
@@ -87,13 +167,27 @@ export default function Legacy({ bodyState, dishItem }) {
         }
 
 
+
+
         updateDataProp(newBody, (data, error) => {
+            console.log(error);
             setBodyState(data);
         });
 
-    }, [bodyState]);
+    }, [dataProp, bodyState]);
 
 
+
+    const editCell = useCallback((id, dataUpdate, typeFood) => {
+        if (!dataProp) return null;
+        const newBody = { ...dataProp.data };
+        const indexDelay = newBody.body[typeFood].delay.findIndex(delay => delay._id === id);
+        if (indexDelay < 0) return null;
+        newBody.body[typeFood].delay[indexDelay] = { ...newBody.body[typeFood].delay[indexDelay], ...parserPipeOneObject(dataUpdate, true) };
+        updateDataProp(newBody, (data, error) => {
+            setBodyState(data);
+        });
+    }, [dataProp, bodyState]);
 
 
 
@@ -106,36 +200,29 @@ export default function Legacy({ bodyState, dishItem }) {
             setBodyState(data);
         });
 
-    }, []);
-
-
+    }, [dataProp]);
 
 
 
 
     const getNewUrlImg = useCallback((file, dataParams) => {
-        console.log(file);
-        console.log(dataParams);
-
-        /*
         sendImg(file)
             .then(response => {
- 
+
                 if (dataParams.delay === 'delayDeliveryDishWhenItIsReadyInKitchen') {
                     const newData = { ...dataParams.data };
                     newData.imageUrl[dataParams.index].url = response.data.urlFile;
                     editCell(dataParams.id, newData, 'delayDeliveryDishWhenItIsReadyInKitchen');
                 }
                 else {
- 
+
                     editCell(dataParams.id, { ...dataParams.data, imageToShare: response.data.urlFile }, dataParams.delay);
                 }
             })
             .catch(error => {
                 console.log(error);
             })
-            */
-    }, []);
+    }, [dataProp]);
 
 
 
@@ -172,12 +259,69 @@ export default function Legacy({ bodyState, dishItem }) {
     };
 
 
-    return null;
+
+    const chunkArr = (arrProps) => {
+        const chunkSize = 4;
+        const returnArr = [];
+        for (let i = 0; i < arrProps.length; i += chunkSize) {
+            returnArr.push(arrProps.slice(i, i + chunkSize));
+        }
+        return returnArr;
+    };
+
+
+    if (!bodyState) return null;
+
+
+
+    const order = (data) => {
+        return pipeObjectTime(data).sort((a, b) => {
+            const duracionB = TimeOperator.changueTimeMiliSecond(b.timePeriod.end) - TimeOperator.changueTimeMiliSecond(b.timePeriod.init);
+            const duracionA = TimeOperator.changueTimeMiliSecond(a.timePeriod.end) - TimeOperator.changueTimeMiliSecond(a.timePeriod.init);
+            return duracionB - duracionA;
+        });
+    };
+
 
 
 
     return (
-        <>
+        <LayautPages dataId={dataId}>
+            <HeaderPage deletePage={() => deletePage(null, dataProp._id)} dataId={dataId}>
+                <div>
+                    <InputStandart
+                        type='select'
+                        textLabel='Entrega'
+                        setValue={(value) => addRowDelay(value, 'delivery')}
+                        name='type-food'
+                        resectSelect={true}
+                    >
+                        {
+                            entriesNameState.length > 0 && entriesNameState.map(food => (
+                                <option value={food}>dempora en entrega de {food}</option>
+                            ))
+                        }
+                    </InputStandart>
+                </div>
+
+                <div className=''>
+                    <InputStandart
+                        type='select'
+                        textLabel='Preparación'
+                        setValue={addRowDelay}
+                        name='type-food'
+                        resectSelect={true}
+                    >
+                        {
+                            entriesNameState.length > 0 && entriesNameState.map(food => (
+                                <option value={food}>dempora en preparación de {food}</option>
+                            ))
+                        }
+                    </InputStandart>
+
+                </div>
+            </HeaderPage>
+
 
             {
                 config?.propMetricTableInToastPos ?
@@ -641,6 +785,7 @@ export default function Legacy({ bodyState, dishItem }) {
                     :
                     null
             }
-        </>
+            <FooterPage eventClick={() => console.log(bodyState)} />
+        </LayautPages>
     );
-}
+};

@@ -95,7 +95,8 @@ export default function DeliveyDelay({ delay_data, dishItem, styles, editCell })
 
         >
             {
-                delay_data.delay.map((delayDelivery, indexDelay) => {
+                delay_data && delay_data.delay.map((delayDelivery, indexDelay) => {
+                    if (!delay_data?.delay) return null;
                     return (
                         <LayautNovelty
                             onSwipeRight={{

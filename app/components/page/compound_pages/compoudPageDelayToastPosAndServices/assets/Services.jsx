@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import TimeOperator from '../../../../../lib/time';
+import TimeOperator from '@/lib/time';
 
 import { pipeObjectTime, parserPipeOneObject, order } from '../../../../../lib/dataParser/dataForNovelty';
 import { chunkArr, chunkArray } from '../../../../../lib/dataParser/arr';
@@ -74,6 +74,7 @@ export default function Services({ delay_data, dishItem, styles, editCell, }) {
         >
             {
                 dishItem.map((dish) => {
+                    if (!delay_data?.delay) return null;
 
                     const delatTypeOfDish = delay_data.delay.filter(delay => delay.nameDish === dish.nameDishe);
                     if (delatTypeOfDish.length === 0) return null;
