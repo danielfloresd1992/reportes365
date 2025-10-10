@@ -1,45 +1,45 @@
 {
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "**/.server/**/*.ts",
-    "**/.server/**/*.tsx",
-    "**/.client/**/*.ts",
-    "**/.client/**/*.tsx",
-    "app/components/notifications/push_norifications/box_notification.jsx",
-    "app/store/store.ts",
-    "app/hook/useDataForPages.tsx",
-    "app/components/inputs/Note_Description.jsx",
-    "app/components/page/PageMultiProposal/PageMultiProposal.jsx"
-  ],
-  "compilerOptions": {
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ES2022"
-    ],
-    "types": [
-      "@remix-run/node",
-      "vite/client"
-    ],
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "jsx": "react-jsx",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "resolveJsonModule": true,
-    "target": "ES2022",
-    "strict": true,
-    "allowJs": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
-    "paths": {
-      "~/*": [
-        "./app/*"
-      ]
-    },
-    // Vite takes care of building everything, not tsc.
-    "noEmit": true
-  }
+    "include": [
+        "**/*.ts",
+        "**/*.tsx",
+        "**/.server/**/*.ts",
+        "**/.server/**/*.tsx",
+        "**/.client/**/*.ts",
+        "**/.client/**/*.tsx",
+        "app/components/notifications/push_norifications/box_notification.jsx",
+        "app/store/store.ts",
+        "app/hook/useDataForPages.tsx",
+        "app/components/inputs/Note_Description.jsx",
+        "app/components/page/PageMultiProposal/PageMultiProposal.jsx"
+, "app/components/page/page_delay_two_image/page_image.jsx"    ],
+    "compilerOptions": {
+        "lib": [
+            "DOM",
+            "DOM.Iterable",
+            "ES2022"
+        ],
+        "types": [
+            "@remix-run/node",
+            "vite/client"
+        ],
+        "isolatedModules": true,
+        "esModuleInterop": true,
+        "jsx": "react-jsx",
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "resolveJsonModule": true,
+        "target": "ES2022",
+        "strict": true,
+        "allowJs": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "baseUrl": ".",
+        "paths": {
+            "~/*": [
+                "./app/*"
+            ]
+        },
+        // Vite takes care of building everything, not tsc.
+        "noEmit": true
+    }
 }

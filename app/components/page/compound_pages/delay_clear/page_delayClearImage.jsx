@@ -6,6 +6,9 @@ import TimeOperator from '../../../../lib/time' //.calculateTime
 import useFindArticle from '../../../../hook/find_to_asidebar';
 
 
+
+
+
 export default function PageForDelayClearImage({ styles, data, setData, saveImgProp, typeDelay }) {
 
 
@@ -21,7 +24,6 @@ export default function PageForDelayClearImage({ styles, data, setData, saveImgP
         data.data.coordinates[index] = coordinates;
         setData({ coordinates: [...data.data.coordinates] });
     };
-
 
 
 

@@ -6,7 +6,7 @@ import useFindArticle from '../../hook/find_to_asidebar';
 
 
 
-const TableFourCol = ({ header, body, addRowProp, deleteRowProp, editCellProp, orderTable, saveOrder, styles }: TableProp): ReactNode => {
+const TableFourCol = ({ header, body, addRowProp, deleteRowProp, editCellProp, orderTable, saveOrder, styles, hiddenTable = false }: TableProp): ReactNode => {
 
     if (!header || !body || !Array.isArray(body)) return null;
 
@@ -57,9 +57,11 @@ const TableFourCol = ({ header, body, addRowProp, deleteRowProp, editCellProp, o
                 style={{ height: styleTableState, backgroundColor: '', color: '' }}>
                 <thead>
                     <tr className='bg-customGrayTableHead' style={{ position: 'relative', height: '50px' }}>
-                        {header.map((item: string, index: number) => (
-                            <th key={`data-h${index}`} style={{ backgroundColor: styles?.bgTextBox ?? '#ddd', color: styles?.colorTextBox ?? '#000' }} className='border border-solid border-gray-400 text-white'>{item}</th>
-                        ))}
+                        {header.map((item: string, index: number) => {
+
+                            if (hiddenTable && index === 0) return null;
+                            return <th key={`data-h${index}`} style={{ backgroundColor: styles?.bgTextBox ?? '#ddd', color: styles?.colorTextBox ?? '#000' }} className='border border-solid border-gray-400 text-white'>{item}</th>
+                        })}
                     </tr>
                 </thead>
 
@@ -68,7 +70,7 @@ const TableFourCol = ({ header, body, addRowProp, deleteRowProp, editCellProp, o
                         row?.timePeriod ?
                             <tr
                                 key={`data-0${index}`}
-                                style={{ ...styleRow, ...{ fontWeight: 700 } }}
+                                style={{ ...styleRow, fontWeight: 700 }}
                                 className={row.sharedByUser ? (row?.validationResult?.isApproved === true
                                     ? 'hover-row'
                                     : (row?.validationResult?.isApproved === false
@@ -82,16 +84,21 @@ const TableFourCol = ({ header, body, addRowProp, deleteRowProp, editCellProp, o
                                     : ''}
                                 onDoubleClick={() => findNovelty(row._id)}
                             >
-                                <td
-                                    contentEditable
-                                    suppressContentEditableWarning
-                                    className='border border-solid border-gray-400 w-full text-center'
-                                    dangerouslySetInnerHTML={{ __html: row?.table || '' }}
-                                    onBlur={e => {
-                                        e.target.blur();
-                                        editCellProp(index, { ...dataState[index], table: e.currentTarget.innerHTML });
-                                    }}
-                                />
+                                {
+                                    hiddenTable ?
+                                        null
+                                        :
+                                        <td
+                                            contentEditable
+                                            suppressContentEditableWarning
+                                            className='border border-solid border-gray-400 w-full text-center'
+                                            dangerouslySetInnerHTML={{ __html: row?.table || '' }}
+                                            onBlur={e => {
+                                                e.target.blur();
+                                                editCellProp(index, { ...dataState[index], table: e.currentTarget.innerHTML });
+                                            }}
+                                        />
+                                }
 
                                 <td
                                     contentEditable

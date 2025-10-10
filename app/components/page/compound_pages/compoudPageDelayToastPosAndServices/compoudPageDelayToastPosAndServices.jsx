@@ -8,25 +8,14 @@ import FooterPage from '../footerCompound';
 
 
 import InputStandart from '../../../inputs/input_standart';
-
-
-
-
-
-
-
 import Legacy from './assets/legacy';
-
 import Summary from './assets/symary';
 import TabletPos from './assets/tablet_pos';
 import DeliveyDelay from './assets/DelivryDishDelay';
 import Services from './assets/Services';
 
+
 import SelectDelay from './assets/section_for_delay/select_delay';
-
-
-import { pipeObjectTime, parserPipeOneObject, order } from '../../../../lib/dataParser/dataForNovelty';
-import { downloadJSON } from '../../../../lib/debbuger/create_file';
 
 
 
@@ -75,10 +64,8 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
 
 
-
-
     // PUT COMPONENT ALL
-    const editCell = useCallback((data, type) => {
+    const put_delay = useCallback((data, type) => {
         const getDelayCategory = getObjectByType(dataState, type);
         const dataForRequest = { ...dataState };
         dataForRequest[getDelayCategory.key] = data;
@@ -88,7 +75,6 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
         });
 
     }, [dataState]);
-
 
 
 
@@ -104,10 +90,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
 
 
-
     if (!establishmentStore || !dataState) return null;
-
-
 
 
 
@@ -115,7 +98,6 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
     return (
         <LayautPages dataId={dataId}>
             <HeaderPage deletePage={() => deletePage(null, dataProp._id)} dataId={dataId}>
-
                 <div className='w-full flex flex-col'>
                     <div className='w-full flex justify-center items-center flex-col gap-[.5rem]'>
                         <b className='text-center'>Legacy</b>
@@ -156,9 +138,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
                             </div>
                         </div>
-
                     </div>
-
                 </div>
             </HeaderPage>
 
@@ -181,7 +161,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                     dishItem,
                     styles,
                     config,
-                    editCell
+                    editCell: put_delay
                 }}
             />
 
@@ -192,7 +172,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                     establishmentStore,
                     dishItem,
                     styles,
-                    editCell
+                    editCell: put_delay
                 }}
 
             />
@@ -203,7 +183,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                     delay_data: dataState.delayDeliveryDishWhenItIsReadyInKitchen,
                     dishItem,
                     styles,
-                    editCell
+                    editCell: put_delay
                 }}
             />
 
@@ -213,7 +193,8 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                     delay_data: dataState.delayServices,
                     dishItem,
                     styles,
-                    editCell
+                    editCell: put_delay,
+                    hiddenTable: dish.requiresTableNumber || false
                 }}
                 ref={servicesRef}
             />

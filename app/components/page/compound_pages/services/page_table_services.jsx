@@ -14,7 +14,7 @@ import { myUserContext } from '../../../../context/sessionContext';
 
 
 
-export default function PageDelayClearTable({ styles, dataList, setData, sasveImgProp, typeDelay, config}) {
+export default function PageDelayClearTable({ styles, dataList, setData, sasveImgProp, typeDelay, config }) {
 
 
     if (!dataList?.body) return null;
@@ -23,20 +23,20 @@ export default function PageDelayClearTable({ styles, dataList, setData, sasveIm
     const { delay1attention } = useDataForPages();
     const { dataSessionState } = useContext(myUserContext);
     const refElement = useRef(null);
-    const [ styleStateText, setStyleState ] = useState({});
-    const [ styleBoxHeightState, setStyleBoxHeightState ] = useState();
+    const [styleStateText, setStyleState] = useState({});
+    const [styleBoxHeightState, setStyleBoxHeightState] = useState();
 
     const textStyle = {
-        color: dataList?.body?.length > 1 && dataList?.body?.length < 4  ?  '#fff' : "#000000",
-        textShadow: dataList?.body?.length > 1 && dataList?.body?.length < 4  ? 
-        `
+        color: dataList?.body?.length > 1 && dataList?.body?.length < 4 ? '#fff' : "#000000",
+        textShadow: dataList?.body?.length > 1 && dataList?.body?.length < 4 ?
+            `
         -.5px -.5px 0 rgb(0, 0, 0),
          .5px -.5px 0 rgb(0, 0, 0),
         -.5px .5px 0 rgb(0, 0, 0),
          .5px .5px 0 rgb(0, 0, 0)
         `
-        :
-        `
+            :
+            `
           -.5px -.5px 0 rgb(255, 255, 255),
            .5px -.5px 0 rgb(255, 255, 255),
           -.5px .5px 0 rgb(255, 255, 255),
@@ -47,23 +47,23 @@ export default function PageDelayClearTable({ styles, dataList, setData, sasveIm
 
 
 
-      useEffect(() => {
-        setStyleState({ 
+    useEffect(() => {
+        setStyleState({
             position: dataList?.body?.length === 1 ? 'absolute' : 'unset',
             top: dataList?.body?.length === 1 ? '110px' : 'revert-layer'
         });
-        setStyleBoxHeightState(dataList?.body?.length === 1 ?  '300px' : 'revert-layer')
-      }, [dataList]);
+        setStyleBoxHeightState(dataList?.body?.length === 1 ? '300px' : 'revert-layer')
+    }, [dataList]);
 
 
-    
-    const titleClean = dataList?.namePageTable ?? (dataList?.body?.length > 1 ? 
-            `Mesas con demoras superior ${TimeOperator.timePeriod(config?.timeDelayClean ?? '00:00:00')} en ser limpiadas` 
-        : 
-            `Mesa con demoras superior a ${TimeOperator.timePeriod(config?.timeDelayClean ?? '00:00:00')} en ser limpiada`);
 
-        
-   
+    const titleClean = dataList?.namePageTable ?? (dataList?.body?.length > 1 ?
+        `Mesas con demoras superior ${TimeOperator.timePeriod(config?.timeDelayClean ?? '00:00:00')} en ser limpiadas`
+        :
+        `Mesa con demoras superior a ${TimeOperator.timePeriod(config?.timeDelayClean ?? '00:00:00')} en ser limpiada`);
+
+
+
 
     const objectDelay = dataList?.body[0];
     const initTime = typeof objectDelay?.timePeriod === 'string' ? JSON.parse(objectDelay?.timePeriod) : objectDelay?.timePeriod;
@@ -71,7 +71,7 @@ export default function PageDelayClearTable({ styles, dataList, setData, sasveIm
 
 
 
-    const data = dataList.body[0].timePeriod ? 
+    const data = dataList.body[0].timePeriod ?
         dataList.body.sort((a, b) => {
             const timeA = typeof a.timePeriod === 'string' ?
                 TimeOperator.calculateTime(JSON.parse(a.timePeriod).init, JSON.parse(a.timePeriod).end).split(':').reduce((acc, time) => (60 * acc) + +time)
@@ -83,12 +83,12 @@ export default function PageDelayClearTable({ styles, dataList, setData, sasveIm
                 TimeOperator.calculateTime(b.timePeriod.init, b.timePeriod.end).split(':').reduce((acc, time) => (60 * acc) + +time)
             return timeB - timeA;
         })
-    :
+        :
         null;
 
 
 
-    
+
     const saveCoordinate = (coordinates, index) => {
         if (!Array.isArray(dataList?.coordinates)) dataList.coordinates = [];
         dataList.coordinates[index] = coordinates;
@@ -97,11 +97,11 @@ export default function PageDelayClearTable({ styles, dataList, setData, sasveIm
 
 
 
- 
+
     const editCell = (index, propiety) => {
         const newBody = [...dataList.body];
         newBody[index] = { ...newBody[index], ...propiety }
-        setData({body: newBody});
+        setData({ body: newBody });
     };
 
 
@@ -117,21 +117,22 @@ export default function PageDelayClearTable({ styles, dataList, setData, sasveIm
     const removeRow = (index) => {
         const newBody = [...dataList.body];
         newBody.splice(index, 1);
-        setData({body: newBody});
+        setData({ body: newBody });
     };
 
 
-    if(refElement.current) refElement.current.style.height = styleBoxHeightState;
-    if(dataList.body < 1) return null;
+    if (refElement.current) refElement.current.style.height = styleBoxHeightState;
+    if (dataList.body < 1) return null;
 
 
     return (
         <LayautNovelty styles={styles} namePage={dataList?.body?.length === 1 ? '' : (typeDelay === 'clean' ? titleClean : title1Atention)} editTitle={value => setData({ namePageTable: value })}
             getElementLayaut={(element) => {
-             
+
                 refElement.current = element.current;
             }}
         >
+            hola
             <div className='w-[95%] h-[95%] p-[1rem] flex flex-col items-center justify-between gap-[1rem]'>
                 {
                     dataList?.body?.length === 1 ?
@@ -141,28 +142,28 @@ export default function PageDelayClearTable({ styles, dataList, setData, sasveIm
                 }
 
                 {
-                    
+
                     dataList?.body?.length < 4 ?
                         <div className='h-[100%] w-full flex gap-4 flex-col items-center justify-center'>
                             <div className='w-full flex flex-col items-center'
                                 style={styleStateText}
                             >
                                 {
-                                    
+
 
                                     <>
-                                    {
-                                        dataList?.body?.length === 1 ?
-                                        <p className='text-xl font-medium' style={textStyle}>Mesa con</p>
-                                        :
-                                        <p className='text-xl font-medium' style={textStyle}>{'Mesa con mayor demora en ser atendida'}</p>
-                                    }
-                                       
+                                        {
+                                            dataList?.body?.length === 1 ?
+                                                <p className='text-xl font-medium' style={textStyle}>Mesa con</p>
+                                                :
+                                                <p className='text-xl font-medium' style={textStyle}>{'Mesa con mayor demora en ser atendida'}</p>
+                                        }
+
                                         <p className='text-xl font-medium' style={textStyle}>{`Mesa ${dataList?.body[0].table} (Desde: ${initTime?.init} - Hasta: ${initTime?.end}) Duración: ${TimeOperator.calculateTime(initTime?.init, initTime?.end)}`}</p>
                                     </>
                                 }
-                            
-                                
+
+
                             </div>
                             <div className='w-full flex gap-4 w-full items-center justify-center'>
                                 <Image
@@ -173,7 +174,7 @@ export default function PageDelayClearTable({ styles, dataList, setData, sasveIm
                                     styles={styles}
                                     arrowCordernate={true}
                                     setCoordinates={Array.isArray(dataList?.coordinates) ? dataList?.coordinates[0] : null}
-                                    getFile={(data) => saveImgProp({file: data, indexBody: 0, indexImg: 0})}
+                                    getFile={(data) => saveImgProp({ file: data, indexBody: 0, indexImg: 0 })}
                                     saveCordenate={(data) => saveCoordinate(data, 0)}
                                     index={0}
                                 />
@@ -185,7 +186,7 @@ export default function PageDelayClearTable({ styles, dataList, setData, sasveIm
                                     styles={styles}
                                     arrowCordernate={true}
                                     setCoordinates={Array.isArray(dataList?.coordinates) ? dataList?.coordinates[1] : null}
-                                    getFile={(data) => saveImgProp({file: data, indexBody: 0, indexImg: 1})}
+                                    getFile={(data) => saveImgProp({ file: data, indexBody: 0, indexImg: 1 })}
                                     saveCordenate={(data) => saveCoordinate(data, 1)}
                                     index={1}
                                 />

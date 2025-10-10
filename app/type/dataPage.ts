@@ -42,7 +42,9 @@ export type TableProp = {
     deleteRowProp: (index: number, delay: typeAlertToasdPos | ObjectComplete) => void,
     orderTable: 'minor' | 'major' | undefined,
     saveOrder: () => void,
-    styles: any
+    styles: any,
+    hiddenTable?: boolean
+    alternativeTextArea?: boolean
 }
 
 

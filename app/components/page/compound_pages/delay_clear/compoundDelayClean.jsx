@@ -47,6 +47,7 @@ export default function CompoundPageDelayClear({ styles, data, updateDataProp, c
 
 
 
+
     const saveImg = useCallback(async (dataImg) => {
         try {
             const response = await sendImg(dataImg.file);
@@ -73,7 +74,6 @@ export default function CompoundPageDelayClear({ styles, data, updateDataProp, c
         uddateBodyData({ body: newBody }, true);
         changueText(`Add file ✅`, 'springgreen');
     };
-
 
 
 

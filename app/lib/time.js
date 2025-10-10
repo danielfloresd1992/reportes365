@@ -119,9 +119,13 @@ export default class TimeOperator {
 
 
     static timePeriod(time) { // 00:00:00  RETURN: 00 horas 00 minutos
-        const timeClean = time.split(':')[0] === '00' ? `${time.split(':')[1][1]}${time.split(':')[2] === '00' ? '' : `:${time.split(':')[2]}`} minutos`
-            : `${time.split(':')[0]} horas ${timesplit(':')[1]} minutos`;
-        return timeClean
+        const seconds = Number(time.split(':')[2]);
+        const minutes = Number(time.split(':')[1]);
+        const hours = Number(time.split(':')[0]);
+        const hoursText = hours ? `${hours} hora y ` : '';
+        const minutesText = minutes ? `${minutes}` : '';
+        const secondsText = seconds ? `:${seconds}` : '';
+        return hoursText + minutesText + secondsText + ' minutos';
     }
 
 
