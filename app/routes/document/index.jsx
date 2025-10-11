@@ -79,7 +79,7 @@ export default function Document() {
                     if (errorCall) throw 'Error al cargar las alertas en el documento';
 
                     const { arr } = processDataNovelty({ summaryData, noveltyPageData, delayToastPostAndServise, establishmentStore, dataArr });
-                    console.log(arr);
+                    
                     arr.unshift(fronPageData);
                     const PromiseArr = [];
 

@@ -27,6 +27,8 @@ export function processDataNovelty({ summaryData, noveltyPageData, delayToastPos
     }, {});
 
 
+    console.warn('groupedItems', groupedItems);
+
     const objectAll = [];
     let delay;
     if (groupedItems?.protocol) {
@@ -77,10 +79,11 @@ export function processDataNovelty({ summaryData, noveltyPageData, delayToastPos
 
 
 
+        /////////////////  DEMORAS DE TABLETS CON TODAS SUS VARIANTES
         if (delay['Demora en preparación de plato'] || delay['Demora en entrega de plato'] || delay['Demora en preparación de Plato fuerte'] || delay['Demora de servicio']) {
 
-
-            delay['Demora en preparación de plato'] && delay['Demora en preparación de plato'].forEach((novelty: any, index: number) => { //demora de tablet convencional
+            //demora de tablet convencional
+            delay['Demora en preparación de plato'] && delay['Demora en preparación de plato'].forEach((novelty: any, index: number) => {
                 const objectReference: NoveltyRefernce = {
                     idReference: novelty._id,
                     data: null
@@ -88,15 +91,15 @@ export function processDataNovelty({ summaryData, noveltyPageData, delayToastPos
                 delayToastPostAndServise.data.delayToastPost.delay.push(novelty);
             });
 
-
-            delay['Demora en preparación de Plato fuerte'] && delay['Demora en preparación de Plato fuerte'].forEach((novelty: any, index: number) => {//marcada antes de tiempo
+            //marcada antes de tiempo
+            delay['Demora en preparación de Plato fuerte'] && delay['Demora en preparación de Plato fuerte'].forEach((novelty: any, index: number) => {
                 const objectReference: NoveltyRefernce = {
                     idReference: novelty._id,
                     data: null
                 };
-                delayToastPostAndServise.data.delayToastPost.delay.push(objectReference);
+                delayToastPostAndServise.data.delayToastPost.delay.push(novelty);
+                //delayToastPostAndServise.data.delayToastPost.delay.push(objectReference);
             });
-
 
             delay['Demora en entrega de plato'] && delay['Demora en entrega de plato'].forEach((novelty: any, index: number) => {// tiempo que excede de listo en cocina a entrga de plato
                 const objectReference: NoveltyRefernce = {
@@ -106,7 +109,6 @@ export function processDataNovelty({ summaryData, noveltyPageData, delayToastPos
                 delayToastPostAndServise.data.delayDeliveryDishWhenItIsReadyInKitchen.delay.push(novelty);
             });
 
-
             delay['Demora de servicio'] && delay['Demora de servicio'].forEach((novelty: any, index: number) => {
                 const objectReference: NoveltyRefernce = {
                     idReference: novelty._id,
@@ -114,9 +116,9 @@ export function processDataNovelty({ summaryData, noveltyPageData, delayToastPos
                 };
                 delayToastPostAndServise.data.delayServices.delay.push(novelty);
             });
-
             objectAll.push(delayToastPostAndServise);
         }
+
 
 
 
