@@ -107,23 +107,25 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
             </HeaderPage>
 
 
-            <Legacy
-                {...{
-                    dataProp: dataState,
-                    dishItem,
-                    styles,
-                    entriesNameState,
-                    config,
-                    dataId,
-                    updateDataProp
-                }}
-                ref={legacyRef}
-            />
+            {dataState.body &&
+                <Legacy
+                    {...{
+                        dataProp: dataState,
+                        dishItem,
+                        styles,
+                        entriesNameState,
+                        config,
+                        dataId,
+                        updateDataProp
+                    }}
+                    ref={legacyRef}
+                />
+            }
 
 
             <Summary
                 {...{
-                    summary: dataState.summary,
+                    dataState,
                     dishItem,
                     styles,
                     config,

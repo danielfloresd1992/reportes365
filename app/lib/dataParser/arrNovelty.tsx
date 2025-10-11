@@ -27,7 +27,7 @@ export function processDataNovelty({ summaryData, noveltyPageData, delayToastPos
     }, {});
 
 
-    console.warn('groupedItems', groupedItems);
+
 
     const objectAll = [];
     let delay;

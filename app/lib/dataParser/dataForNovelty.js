@@ -7,8 +7,6 @@ export const pipeObjectTime = (data, invert) => {
     if (!data) return null;
     const returnArr = [];
 
-    console.log(data)
-
     data.forEach(delay => {
         if (invert) {
             if (delay.timePeriod.init) delay.timePeriod.tomaOrden = delay.timePeriod.init;

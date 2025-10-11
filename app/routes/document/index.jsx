@@ -10,8 +10,6 @@ import ContentPage from '../../components/layaut/ContentPage';
 import ContentPreviewDocument from '../../components/aside/aside_preview_document.js/ContentPreviewDocument';
 import { changueText } from '../../components/headerComponens/NasBarOption';
 import AsideClonePage from '../../components/aside/aside_clone_page/Aside_Clone_Page';
-import { htmlToPng } from '../../lib/file/toPng';
-import { jsPDF } from 'jspdf';
 import shiftToEs from '../../lib/script/shit_lang';
 import { getDocumentById, addPageInDocument, deletePageInDocument, patchDocumentById } from '../../lib/fetching/documents';
 import { getNoveltyForHydration } from '../../lib/fetching/novelty';
@@ -79,7 +77,7 @@ export default function Document() {
                     if (errorCall) throw 'Error al cargar las alertas en el documento';
 
                     const { arr } = processDataNovelty({ summaryData, noveltyPageData, delayToastPostAndServise, establishmentStore, dataArr });
-                    
+
                     arr.unshift(fronPageData);
                     const PromiseArr = [];
 

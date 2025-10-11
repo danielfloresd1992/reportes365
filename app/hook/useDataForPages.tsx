@@ -228,14 +228,13 @@ export default function useDataForPages() {
             header: ['Mesas', 'Toma de orden', 'Listo en tablet', 'Demora en preparación'],
 
 
-            body: {
-
-            },
+            body: null,// DEPRECATED
             // ///////
 
 
             summary: {
-                type: 'summary'
+                type: 'summary',
+                data: {}
             },
 
 
@@ -264,18 +263,20 @@ export default function useDataForPages() {
 
 
     /////////////////////////////////////////  LEGACE  ///////////////////////////////////////////////////////////////////
-    if (establishmentStore) {
+    if (establishmentStore && delayToastPostAndServise.data.body) {
         if (establishmentStore.dishes.length > 0) {
             establishmentStore.dishes.forEach((dish: any) => {
-                delayToastPostAndServise.data.body[dish.nameDishe] = {
-                    delay: [],
-                    average: '00:00:00',
-                    totalProcess: 0
+                if (delayToastPostAndServise.data?.body) {
+                    delayToastPostAndServise.data.body[dish.nameDishe] = {
+                        delay: [],
+                        average: '00:00:00',
+                        totalProcess: 0
+                    }
                 }
+
             });
         }
         else {
-
             if (establishmentStore) delayToastPostAndServise.data.body[establishmentStore.dishMenu.appetizer] = {
                 delay: [],
                 average: '00:00:00',
@@ -291,14 +292,11 @@ export default function useDataForPages() {
                 average: '00:00:00',
                 totalProcess: 0
             };
+            delayToastPostAndServise.data.body.delayDeliveryDishWhenItIsReadyInKitchen = {
+                delay: [],
+                average: '00:00:00'
+            };
         }
-
-
-
-        delayToastPostAndServise.data.body.delayDeliveryDishWhenItIsReadyInKitchen = {
-            delay: [],
-            average: '00:00:00'
-        };
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     }
