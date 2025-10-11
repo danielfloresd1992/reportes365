@@ -101,48 +101,12 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                 <div className='w-full flex flex-col'>
                     <div className='w-full flex justify-center items-center flex-col gap-[.5rem]'>
                         <b className='text-center'>Legacy</b>
-                        <div className='w-full flex gap-[1rem]'>
-                            <div>
-                                <InputStandart
-                                    type='select'
-                                    textLabel='Entrega'
-                                    setValue={(value) => { }}
-                                    name='type-food'
-                                    resectSelect={true}
-                                >
-                                    {
-                                        entriesNameState.length > 0 && entriesNameState.map(food => (
-                                            <option value={food}>dempora en entrega de {food}</option>
-                                        ))
-                                    }
-                                </InputStandart>
-                            </div>
 
-                            <div className=''>
-                                <InputStandart
-                                    type='select'
-                                    textLabel='Preparación'
-                                    name='type-food'
-                                    resectSelect={true}
-                                    setValue={(name_plate) => {
-                                        toastRef.current.addCell(name_plate);
-                                    }}
-                                    value='Sele'
-                                >
-                                    {
-                                        entriesNameState.length > 0 && entriesNameState.map(food => (
-                                            <option value={food} key={food}>dempora en preparación de {food}</option>
-                                        ))
-                                    }
-                                </InputStandart>
-
-                            </div>
-                        </div>
                     </div>
                 </div>
             </HeaderPage>
 
-          
+
             <Legacy
                 {...{
                     dataProp: dataState,
@@ -150,7 +114,8 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                     styles,
                     entriesNameState,
                     config,
-                    dataId
+                    dataId,
+                    updateDataProp
                 }}
                 ref={legacyRef}
             />

@@ -36,7 +36,9 @@ export default function Legacy({ dataProp: dataState,
     dishItem,
     styles,
     config,
-    dataId }) {
+    dataId,
+    updateDataProp
+}) {
 
 
 
@@ -148,7 +150,7 @@ export default function Legacy({ dataProp: dataState,
             }
 
         };
-        const newBody = { ...dataProp.data };
+        const newBody = { ...dataProp };
 
         if (typeDelay === 'delivery') {
             row.imageUrl = [
@@ -180,7 +182,7 @@ export default function Legacy({ dataProp: dataState,
 
     const editCell = useCallback((id, dataUpdate, typeFood) => {
         if (!dataProp) return null;
-        const newBody = { ...dataProp.data };
+        const newBody = { ...dataProp };
         const indexDelay = newBody.body[typeFood].delay.findIndex(delay => delay._id === id);
         if (indexDelay < 0) return null;
         newBody.body[typeFood].delay[indexDelay] = { ...newBody.body[typeFood].delay[indexDelay], ...parserPipeOneObject(dataUpdate, true) };
@@ -193,7 +195,7 @@ export default function Legacy({ dataProp: dataState,
 
     const deleteDelayInTable = useCallback((id, typeFood) => {
         if (!dataProp) return null;
-        const newBody = { ...dataProp.data };
+        const newBody = { ...dataProp };
         newBody.body[typeFood].delay = newBody.body[typeFood].delay.filter(delay => delay._id !== id);
         updateDataProp(newBody, (data, error) => {
             console.log(error);
@@ -283,11 +285,12 @@ export default function Legacy({ dataProp: dataState,
     };
 
 
+    console.log(dataProp);
 
 
     return (
         <LayautPages dataId={dataId}>
-            <HeaderPage deletePage={() => deletePage(null, dataProp._id)} dataId={dataId}>
+            <HeaderPage deletePage={() => { }} dataId={dataId}>
                 <div>
                     <InputStandart
                         type='select'
@@ -406,7 +409,7 @@ export default function Legacy({ dataProp: dataState,
                                                                         className="monotext text-gray-900"
                                                                         contentEditable
                                                                         onBlur={e => {
-                                                                            const newBody = { ...dataProp.data };
+                                                                            const newBody = { ...dataProp };
                                                                             newBody.body[entry].average = e.target.textContent;
                                                                             updateDataProp(newBody, (data, error) => {
                                                                                 setBodyState(data);
@@ -437,7 +440,7 @@ export default function Legacy({ dataProp: dataState,
                                                                 </div>
                                                                 <div>
                                                                     <p className='font-medium text-gray-900 ' contentEditable onBlur={e => {
-                                                                        const newBody = { ...dataProp.data };
+                                                                        const newBody = { ...dataProp };
                                                                         newBody.body[entry].totalProcess = Number(e.target.textContent);
                                                                         updateDataProp(newBody, (data, error) => {
                                                                             setBodyState(data);
@@ -540,7 +543,7 @@ export default function Legacy({ dataProp: dataState,
                                                                 <p
                                                                     contentEditable
                                                                     onBlur={e => {
-                                                                        const newBody = { ...dataProp.data };
+                                                                        const newBody = { ...dataProp };
                                                                         newBody.body[entrie].average = e.target.textContent;
                                                                         updateDataProp(newBody, (data, error) => {
                                                                             setBodyState(data);
@@ -552,7 +555,7 @@ export default function Legacy({ dataProp: dataState,
 
                                                             <td className={styleCellBorder}>
                                                                 <p contentEditable onBlur={e => {
-                                                                    const newBody = { ...dataProp.data };
+                                                                    const newBody = { ...dataProp };
                                                                     newBody.body[entrie].totalProcess = Number(e.target.textContent);
                                                                     updateDataProp(newBody, (data, error) => {
                                                                         setBodyState(data);
@@ -650,7 +653,7 @@ export default function Legacy({ dataProp: dataState,
 
                                             >
                                                 <TableFourCol
-                                                    header={dataProp?.data?.header ?? []}
+                                                    header={dataProp?.header ?? []}
                                                     body={arr}
                                                     addRowProp={() => addRowDelay(key)}
                                                     editCellProp={(index, data) => editCell(data._id, data, key)}
@@ -785,7 +788,7 @@ export default function Legacy({ dataProp: dataState,
                     :
                     null
             }
-            <FooterPage eventClick={() => console.log(bodyState)} />
+
         </LayautPages>
     );
 };
