@@ -37,6 +37,8 @@ export default function TabletPos({ state, dishItem, styles, editCell }) {
             }
 
         };
+
+       
         const newArr = [...state.delay, row];
         editCell({ ...state, delay: newArr }, state.type);
 
