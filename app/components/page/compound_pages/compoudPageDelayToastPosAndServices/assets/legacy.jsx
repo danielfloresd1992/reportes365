@@ -54,7 +54,6 @@ export default function Legacy({ dataProp: dataState,
     const fontSizes = { fontSize: '1.2rem' };
 
 
-    console.log(dataProp)
 
 
     useEffect(() => {
@@ -285,7 +284,7 @@ export default function Legacy({ dataProp: dataState,
     };
 
 
-    console.log(dataProp);
+
 
 
     return (

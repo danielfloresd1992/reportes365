@@ -25,6 +25,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
 
 
 
+
     const establishmentStore = useSelector(store => store.establishmentDocument);
     const [dataState, setDataState] = useState(null);
 
@@ -129,7 +130,7 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                     dishItem,
                     styles,
                     config,
-                    editCell: put_delay
+                    put_delay
                 }}
             />
 

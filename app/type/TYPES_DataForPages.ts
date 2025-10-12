@@ -146,33 +146,31 @@ export type DelayToastPostAndServise = {
 
 
         //// LEGACE
-        header: ['Mesas', 'Toma de orden', 'Listo en tablet', 'Demora en preparación'],
+        header?: ['Mesas', 'Toma de orden', 'Listo en tablet', 'Demora en preparación'] | undefined,
         body: any,
-
-
-
-        summary: any,
 
 
         delayToastPost: {
             header: ['Mesas', 'Toma de orden', 'Listo en tablet', 'Tiempo total'],
             delay: [],
-            type: string
+            type: string,
+            categoryMetrics: any
         },
 
 
         delayDeliveryDishWhenItIsReadyInKitchen: {
             header: null
             delay: [],
-            type: string
+            type: string,
+            categoryMetrics: any
         },
 
 
         delayServices: {
             header: ['Mesas', 'Toma de orden', 'Entrega ', 'Demora'],
             delay: any[],
-            type: string
+            type: string,
+            categoryMetrics: any
         }
-
     }
 };

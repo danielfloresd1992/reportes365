@@ -225,40 +225,59 @@ export default function useDataForPages() {
         data: {
 
             // LEGACE
-            header: ['Mesas', 'Toma de orden', 'Listo en tablet', 'Demora en preparación'],
+            //    header: ['Mesas', 'Toma de orden', 'Listo en tablet', 'Demora en preparación'],
 
 
             body: null,// DEPRECATED
             // ///////
 
 
-            summary: {
-                type: 'summary',
-                data: {}
-            },
-
-
             delayToastPost: {
                 header: ['Mesas', 'Toma de orden', 'Listo en tablet', 'Tiempo total'],
                 delay: [],
-                type: 'toast_pos'
+                type: 'toast_pos',
+                categoryMetrics: {}
             },
 
 
             delayDeliveryDishWhenItIsReadyInKitchen: {
                 header: null,
                 delay: [],
-                type: 'delivery'
+                type: 'delivery',
+                categoryMetrics: {}
             },
 
 
             delayServices: {
                 header: ['Mesas', 'Toma de orden', 'Entrega ', 'Demora'],
                 delay: [],
-                type: 'services'
+                type: 'services',
+                categoryMetrics: {}
             }
         }
     };
+
+
+
+    if (establishmentStore) {
+        const listDiches = establishmentStore.dishes.length > 0 ?
+            establishmentStore.dishes.map((dish: any) => dish.nameDishe)
+            :
+            [establishmentStore.dishMenu.appetize, establishmentStore.dishMenu.mainDish, establishmentStore.dishMenu.dessert];
+
+
+        listDiches.forEach((dish: any) => {
+            delayToastPostAndServise.data.delayToastPost.categoryMetrics[dish] = {};
+            delayToastPostAndServise.data.delayToastPost.categoryMetrics[dish].totalTickets = 0;
+            delayToastPostAndServise.data.delayToastPost.categoryMetrics[dish].avgPreparation = '00:00:00';
+
+            delayToastPostAndServise.data.delayDeliveryDishWhenItIsReadyInKitchen.categoryMetrics[dish] = {};
+            delayToastPostAndServise.data.delayDeliveryDishWhenItIsReadyInKitchen.categoryMetrics[dish].avgDelayOverLimit = '00:00:00';
+
+            delayToastPostAndServise.data.delayServices.categoryMetrics[dish] = {};
+            delayToastPostAndServise.data.delayServices.categoryMetrics[dish].avgDelayOverLimit = '00:00:00';
+        });
+    }
 
 
 
@@ -273,7 +292,6 @@ export default function useDataForPages() {
                         totalProcess: 0
                     }
                 }
-
             });
         }
         else {

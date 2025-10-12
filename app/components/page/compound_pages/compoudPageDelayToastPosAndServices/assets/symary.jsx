@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { useSelector } from 'react-redux';
 import LayautNovelty from '../../../../layaut/LayautPage';
 
@@ -17,19 +17,22 @@ import foodIco from '../../../../../../public/ico/icons8-comida-64.png';
 
 
 
-export default function Summary({ dataState, dishItem, styles, config, editCell }) {
+export default memo(function Summary({ dataState, dishItem, styles, config, put_delay }) {
 
 
-    const establishmentStore = useSelector(store => store.establishmentDocument);
     const [bodyState, setBodyState] = useState(null);
     const [entriesNameState, setEntriesNameState] = useState([]);
     const [ImgesState, setImageState] = useState([]);
 
 
     const styleCellBorder = 'border border-black text-lg';
-    const styleCellBorderR = 'text-center border-r border-r-solid border-r-black';
-    const styleCell = 'text-center w-1/3';
-    const fontSizes = { fontSize: '1.2rem' };
+
+    const totalDelayToast = dataState.delayToastPost.delay.length;
+    const totalDelayDelivety = dataState.delayDeliveryDishWhenItIsReadyInKitchen.delay.length;
+
+    for (let category in dataState.delayToastPost.categoryMetrics) {
+        console.log(category);
+    }
 
 
 
@@ -53,47 +56,55 @@ export default function Summary({ dataState, dishItem, styles, config, editCell 
 
 
 
-    const pipeObjectTime = (data, invert) => {
-        if (!data) return null;
-        const returnArr = [];
+    console.log(dataState);
+    console.log(dishItem);
 
-        data.forEach(delay => {
-            if (invert) {
-                delay.timePeriod.tomaOrden = delay.timePeriod.init;
-                delay.timePeriod.listoTablet = delay.timePeriod.end;
-            }
-            else {
-                delay.timePeriod.init = delay.timePeriod.tomaOrden;
-                delay.timePeriod.end = delay.timePeriod.listoTablet;
-            }
 
-            returnArr.push(delay);
+
+    const average = (write = false) => {
+
+        const put = (value, nameDish) => {
+            console.log(value);
+
+            const newData = { ...dataState.delayToastPost }
+            newData.categoryMetrics[nameDish].avgPreparation = value;
+            console.log(newData);
+            // put_delay(newData, dataState.delayToastPost.type);
+        };
+
+
+        return dishItem.map(dish => {
+            const delays = dataState.delayToastPost.categoryMetrics[dish.nameDishe];
+
+
+            if (!(dishItem.length > 2 && dishItem.length < 5)) {
+                return (
+                    <>
+                        <td className={styleCellBorder}>{dish.nameDishe} </td>
+                        <td className={styleCellBorder}>
+                            <p
+                                contentEditable={write}
+                                onBlur={(e) => put(e.target.textContent)}
+                            >{delays.avgPreparation}</p>
+                        </td>
+                    </>
+                )
+            }
+            return (
+                <div className='w-full flex justify-between'>
+
+                    <div>
+                        <p className='text-gray-600 block'>{dish.nameDishe}:</p>
+                    </div>
+                    <div>
+                        <p className='font-medium text-green-600' contentEditable={write} onBlur={(e) => put(e.target.textContent, dish.nameDishe)}> {delays.avgPreparation}</p>
+                    </div>
+                </div>
+            )
         });
-        return returnArr;
-    };
+    }
 
 
-
-
-    const parserPipeOneObject = (data, invert) => {
-        if (!data) return null;
-        const delay = { ...data };
-        if (delay.timePeriod && invert) {
-            delay.timePeriod.tomaOrden = delay.timePeriod.init;
-            delay.timePeriod.listoTablet = delay.timePeriod.end;
-        }
-        else if (delay.timePeriod) {
-            delay.timePeriod.init = delay.timePeriod.tomaOrden;
-            delay.timePeriod.end = delay.timesPeriod.listoTablet;
-        }
-        return delay;
-    };
-
-
-
-
-
-    console.log(config);
     if (!config?.propMetricTableInToastPos) return null;
 
 
@@ -117,7 +128,7 @@ export default function Summary({ dataState, dishItem, styles, config, editCell 
 
 
                                     <div className="flex justify-between py-[.1rem] border-b border-gray-100 monotext">
-                                        <div className='w-[50%]'>totalProces
+                                        <div className='w-[50%]'>
                                             <p className="w-full text-gray-600">Procesos evaluados</p>
                                         </div>
                                         <div className='w-[50%]'>
@@ -135,13 +146,13 @@ export default function Summary({ dataState, dishItem, styles, config, editCell 
                                                 width: '100%',
                                                 display: 'block',
                                                 textAlign: 'start'
-                                            }} className='w-full'>Demoras preparación</p>
+                                            }} className='w-full'>Demoras preparación:</p>
                                         </div>
                                         <div className='w-[50%]'>
                                             <p style={{
                                                 display: 'block',
                                                 textAlign: 'end'
-                                            }} className="w-full font-medium"></p>
+                                            }} className="w-full font-medium">{totalDelayToast}</p>
                                         </div>
                                     </div>
 
@@ -150,13 +161,13 @@ export default function Summary({ dataState, dishItem, styles, config, editCell 
                                             <p style={{
                                                 display: 'block',
                                                 textAlign: 'start'
-                                            }} className='w-full'>Demoras en entrega</p>
+                                            }} className='w-full'>Demoras en entrega:</p>
                                         </div>
                                         <div className='w-[50%]'>
                                             <p style={{
                                                 display: 'block',
                                                 textAlign: 'end'
-                                            }} className="font-medium"></p>
+                                            }} className="font-medium">{totalDelayDelivety}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -167,30 +178,10 @@ export default function Summary({ dataState, dishItem, styles, config, editCell 
                                         <img className='w-[25px] h-[25px]' src={icoReloj} alt='ico-grafuc' />
                                         <h2>Tiempos Promedio</h2>
                                     </div>
-
                                     {
-                                        dishItem.map((dish) => (
-                                            <div className="flex justify-between py-[.1rem] border-b border-gray-100 monotext" key=''>
-                                                <div>
-                                                    <p className="text-gray-600"></p>
-                                                </div>
-                                                <div>
-                                                    <p
-                                                        className="monotext text-gray-900"
-                                                        contentEditable
-                                                        onBlur={e => {
-                                                            const newBody = { ...dataProp.data };
-                                                            newBody.body[entry].average = e.target.textContent;
-                                                            updateDataProp(newBody, (data, error) => {
-
-                                                            });
-                                                        }}
-                                                    ></p>
-                                                </div>
-
-                                            </div>
-                                        ))
+                                        average(true)
                                     }
+
                                 </div>
                             </div>
 
@@ -201,51 +192,33 @@ export default function Summary({ dataState, dishItem, styles, config, editCell 
                                         <img className='w-[25px] h-[25px]' src={icoProcess} alt='ico-grafuc' />
                                         <h2>Procesos por Categoría</h2>
                                     </div>
+                                    <div className="flex flex-col gap-[.2rem] justify-between py-[.1rem] border-b border-gray-100 monotext" key=''>
 
-                                    {
-                                        dishItem.map((dish) => (
-                                            <div className='flex justify-between py-[.1rem] border-b border-gray-100 monotext' key=''>
-                                                <div>
-                                                    <p className='text-gray-600'></p>
-                                                </div>
-                                                <div>
-                                                    <p className='font-medium text-gray-900 ' contentEditable onBlur={e => {
-                                                        const newBody = { ...dataProp.data };
-                                                        newBody.body[entry].totalProcess = Number(e.target.textContent);
-                                                        updateDataProp(newBody, (data, error) => {
-
-                                                        });
-                                                    }}
-                                                    ></p>
-                                                </div>
-
-                                            </div>
-                                        ))
-                                    }
+                                    </div>
                                 </div>
 
 
                                 <div className="w-[48%] bg-white rounded-lg shadow-sm border border-gray p-[.5rem]">
                                     <div className='flex flex-row gap-[.5rem] text-lg font-semibold text-gray-800 border-b border-gray-200 pb-[.5rem] mb-[.5rem]'>
                                         <img className='w-[25px] h-[25px]' src={icoAlert} alt='ico-grafuc' />
-                                        <h2>Demoras por categorias</h2>
+                                        <h2>Demoras de preparación por categorias</h2>
                                     </div>
                                     <div className="bg-green-50 rounded-md p-3 mb-4">
                                         {
-                                            dishItem.map(dish => (
-                                                <div className="flex justify-between py-[.1rem] border-b border-gray-100 monotext" key=''>
-                                                    <div>
-                                                        <p className="text-gray-600"></p>
+                                            dishItem.map(dish => {
+                                                const delay = dataState.delayToastPost.delay.filter(delay => delay.nameDish === dish.nameDishe);
+                                                return (
+                                                    <div className="flex justify-between py-[.1rem] border-b border-gray-100 monotext" key={`metric${dish.nameDishe}`}>
+                                                        <div>
+                                                            <p className="text-gray-600">{dish.nameDishe}:</p>
+                                                        </div>
+                                                        <div>
+                                                            <p className="font-medium text-green-600">{delay.length}</p>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <p className="font-medium text-green-600">
-                                                            {
+                                                )
+                                            })
 
-                                                            }
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            ))
                                         }
                                     </div>
                                     <div className="flex justify-between py-[.1rem] text-green ">
@@ -368,7 +341,7 @@ export default function Summary({ dataState, dishItem, styles, config, editCell 
                                             fontWeight: '700'
                                         }}
 
-                                    ></td>
+                                    >{totalDelayToast}</td>
                                 </tr>
 
 
@@ -392,4 +365,4 @@ export default function Summary({ dataState, dishItem, styles, config, editCell 
             }
         </LayautNovelty>
     );
-}
+});
