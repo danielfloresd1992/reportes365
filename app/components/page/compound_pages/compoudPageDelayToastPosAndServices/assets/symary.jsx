@@ -29,8 +29,8 @@ export default memo(function Summary({ dataState, dishItem, styles, config, put_
 
 
     let totalTiketDelay = 0;
-    const totalDelayToast = dataState.delayToastPost.delay.length;
-    const totalDelayDelivety = dataState.delayDeliveryDishWhenItIsReadyInKitchen.delay.length;
+    const totalDelayToast = dataState?.delayToastPost?.delay?.length;
+    const totalDelayDelivety = dataState?.delayDeliveryDishWhenItIsReadyInKitchen?.delay?.length;
 
 
     for (let category in dataState.delayToastPost.categoryMetrics) {

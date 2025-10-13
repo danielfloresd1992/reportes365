@@ -124,16 +124,17 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
             }
 
 
-            <Summary
-                {...{
-                    dataState,
-                    dishItem,
-                    styles,
-                    config,
-                    put_delay
-                }}
-            />
-
+            {
+                dataState.Summary && <Summary
+                    {...{
+                        dataState,
+                        dishItem,
+                        styles,
+                        config,
+                        put_delay
+                    }}
+                />
+            }
 
             <TabletPos
                 state={dataState.delayToastPost}
