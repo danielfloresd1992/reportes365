@@ -90,7 +90,7 @@ export default memo(function Summary({ dataState, dishItem, styles, config, put_
                             <p className='monotext text-gray-600 block'>{dish.nameDishe}:</p>
                         </div>
                         <div>
-                            <p className='monotext font-medium' contentEditable={write} onBlur={(e) => put(e.target.textContent, dish.nameDishe)}>{delays.avgPreparation}</p>
+                            <p className='monotext font-medium' contentEditable={write} onBlur={(e) => putAverage(e.target.textContent, dish.nameDishe)}>{delays.avgPreparation}</p>
                         </div>
                     </div>
                 )
