@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef, memo } from 'react';
+import { useState, memo, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import LayautNovelty from '../../../../layaut/LayautPage';
-
+import TabletLayaut from '@/components/table/table_layaut';
 
 import icoGrafic from '../../../../../../public/ico/ico_page_metric/icons8-gráfico-combinado-48.png';
 import icoReloj from '../../../../../../public/ico/icons8-reloj-50.png';
@@ -59,49 +59,43 @@ export default memo(function Summary({ dataState, dishItem, styles, config, put_
     };
 
 
+    const putAverage = (value, nameDish) => {
+        const newData = { ...dataState.delayToastPost }
+        newData.categoryMetrics[nameDish].avgPreparation = value;
+        put_delay(newData, dataState.delayToastPost.type);
+    };
+
+
+
+    const putTiketsTotal = (value, nameDish) => {
+        const newData = { ...dataState.delayToastPost }
+        newData.categoryMetrics[nameDish].totalTickets = Number(value);
+        put_delay(newData, dataState.delayToastPost.type);
+    };
 
 
 
     const average = (write = false) => {
 
-        const put = (value, nameDish) => {
-            console.log(value);
 
-            const newData = { ...dataState.delayToastPost }
-            newData.categoryMetrics[nameDish].avgPreparation = value;
-            put_delay(newData, dataState.delayToastPost.type);
-        };
 
 
         return dishItem.map(dish => {
             const delays = dataState.delayToastPost.categoryMetrics[dish.nameDishe];
 
-
-            if (!(dishItem.length > 2 && dishItem.length < 5)) {
+            if (dishItem.length > 2 && dishItem.length < 5) {
                 return (
-                    <>
-                        <td className={styleCellBorder}>{dish.nameDishe} </td>
-                        <td className={styleCellBorder}>
-                            <p
-
-                                contentEditable={write}
-                                onBlur={(e) => put(e.target.textContent)}
-                            >{delays.avgPreparation}</p>
-                        </td>
-                    </>
+                    <div className='w-full flex justify-between' >
+                        <div>
+                            <p className='monotext text-gray-600 block'>{dish.nameDishe}:</p>
+                        </div>
+                        <div>
+                            <p className='monotext font-medium' contentEditable={write} onBlur={(e) => put(e.target.textContent, dish.nameDishe)}>{delays.avgPreparation}</p>
+                        </div>
+                    </div>
                 )
             }
-            return (
-                <div className='w-full flex justify-between'>
 
-                    <div>
-                        <p className='monotext text-gray-600 block'>{dish.nameDishe}:</p>
-                    </div>
-                    <div>
-                        <p className='monotext font-medium' contentEditable={write} onBlur={(e) => put(e.target.textContent, dish.nameDishe)}> {delays.avgPreparation}</p>
-                    </div>
-                </div>
-            )
         });
     };
 
@@ -123,20 +117,20 @@ export default memo(function Summary({ dataState, dishItem, styles, config, put_
 
             if (!(dishItem.length > 2 && dishItem.length < 5)) {
                 return (
-                    <>
+                    <Fragment key={`tickes-${dish.nameDishe}`}>
                         <td className={styleCellBorder}>{dish.nameDishe} </td>
                         <td className={styleCellBorder}>
                             <p
 
                                 contentEditable={write}
                                 onBlur={(e) => put(e.target.textContent)}
-                            >{delays.totalTickets}</p>
+                            >{delays.totalTickets}</p>|
                         </td>
-                    </>
+                    </Fragment>
                 )
             }
             return (
-                <div className='w-full flex justify-between'>
+                <div className='w-full flex justify-between' key={`tickes-${dish.nameDishe}`}>
 
                     <div>
                         <p className='monotext text-gray-600 block'>{dish.nameDishe}:</p>
@@ -322,38 +316,35 @@ export default memo(function Summary({ dataState, dishItem, styles, config, put_
                             </thead>
                             <tbody>
                                 {
-                                    dishItem.map(dish => (
-                                        <tr key={dish.nameDish}>
-                                            <td className={styleCellBorder}> </td>
-                                            <td className={styleCellBorder}>
-                                                <p
-                                                    contentEditable
-                                                    onBlur={e => {
-                                                        const newBody = { ...dataProp.data };
-                                                        newBody.body[dish].average = e.target.textContent;
-                                                        updateDataProp(newBody, (data, error) => {
-                                                            setBodyState(data);
-                                                        });
-                                                    }}
-                                                ></p>
-                                            </td>
+                                    dishItem.map(dish => {
+                                        const summary = dataState.delayToastPost.categoryMetrics[dish.nameDishe];
+                                        const delay = dataState.delayToastPost.delay.filter(delay => delay.nameDish === dish.nameDishe);
+
+                                        return (
+                                            <Fragment key={dish.nameDishe}>
+                                                <tr>
+                                                    <td className={styleCellBorder}>{dish.nameDishe} </td>
+                                                    <td className={styleCellBorder}>
+                                                        <p
+
+                                                            contentEditable
+                                                            onBlur={(e) => putAverage(e.target.textContent, [dish.nameDishe])}
+                                                        >{summary.avgPreparation}</p>
+                                                    </td>
+
+                                                    <td className={styleCellBorder}>
+                                                        <p contentEditable onBlur={e => {
+                                                            putTiketsTotal(e.target.textContent, dish.nameDishe)
+                                                        }}
+                                                        >{summary.totalTickets}</p>
+                                                    </td>
 
 
-                                            <td className={styleCellBorder}>
-                                                <p contentEditable onBlur={e => {
-                                                    const newBody = { ...dataProp.data };
-                                                    newBody.body[dish].totalProcess = Number(e.target.textContent);
-                                                    updateDataProp(newBody, (data, error) => {
-                                                        setBodyState(data);
-                                                    });
-                                                }}
-                                                ></p>
-                                            </td>
-
-
-                                            <td className={styleCellBorder}></td>
-                                        </tr>
-                                    ))
+                                                    <td className={styleCellBorder}>{delay.length}</td>
+                                                </tr>
+                                            </Fragment>
+                                        )
+                                    })
                                 }
                                 <tr>
                                     <td colSpan={3} className={styleCellBorder}
@@ -366,9 +357,7 @@ export default memo(function Summary({ dataState, dishItem, styles, config, put_
                                         style={{
                                             fontWeight: '700'
                                         }}
-                                    >
-
-                                    </td>
+                                    >{totalTiketDelay}</td>
                                 </tr>
 
                                 <tr>
@@ -402,7 +391,7 @@ export default memo(function Summary({ dataState, dishItem, styles, config, put_
                                         style={{
                                             fontWeight: '700'
                                         }}
-                                    ></td>
+                                    >{totalDelayDelivety}</td>
                                 </tr>
                             </tbody>
                         </TabletLayaut>

@@ -123,9 +123,12 @@ export default memo(function CompoundPageDelayToastPosAndServices({ styles, conf
                 />
             }
 
+            {
+                console.log(dataState.Summary)
+            }
 
             {
-                dataState.Summary && <Summary
+                dataState.delayToastPost && <Summary
                     {...{
                         dataState,
                         dishItem,

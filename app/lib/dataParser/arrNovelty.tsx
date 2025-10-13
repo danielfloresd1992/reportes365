@@ -17,8 +17,6 @@ export function groupedItemsByCategory(dataArr: any) {
 
 export function processDataNovelty({ summaryData, noveltyPageData, delayToastPostAndServise, establishmentStore, dataArr }: any) {
 
-
-
     const groupedItems = dataArr.reduce((acc: any, item: any) => {
         const { category } = item.menuRef;
         if (!acc[category]) acc[category] = [];
@@ -27,6 +25,7 @@ export function processDataNovelty({ summaryData, noveltyPageData, delayToastPos
     }, {});
 
 
+    console.log(groupedItems);
 
 
     const objectAll = [];
@@ -139,41 +138,42 @@ export function processDataNovelty({ summaryData, noveltyPageData, delayToastPos
                 });
             }
         }
-
-
-        Object.keys(groupedItems).forEach((key, index) => {
-
-            if (key !== 'delay') {
-                let result;
-                result = groupedItems[key].reduce((acc: any, item: any) => {
-                    const { es } = item.menuRef;
-                    item.jarvisNewsHydration = true;
-                    if (!acc[es]) acc[es] = [];
-                    acc[es].push(item);
-                    return acc;
-                }, {});
-
-                Object.keys(result).forEach((keyInter) => {
-                    let newDaTForPageNovelty = {
-                        ...noveltyPageData,
-                        data: {
-                            ...noveltyPageData.data,
-                            body: [...result[keyInter]],
-                            menuRef: { ...result[keyInter][0].menuRef },
-
-                        }
-                    };
-                    objectAll.push(newDaTForPageNovelty);
-                });
-            }
-        });
-
-
-        const arr = {
-            arr: [summaryData, ...objectAll],
-            group: groupedItems,
-            delay: delay
-        }
-        return arr
     }
+
+
+    Object.keys(groupedItems).forEach((key, index) => {
+
+        if (key !== 'delay') {
+            let result;
+            result = groupedItems[key].reduce((acc: any, item: any) => {
+                const { es } = item.menuRef;
+                item.jarvisNewsHydration = true;
+                if (!acc[es]) acc[es] = [];
+                acc[es].push(item);
+                return acc;
+            }, {});
+
+            Object.keys(result).forEach((keyInter) => {
+                let newDaTForPageNovelty = {
+                    ...noveltyPageData,
+                    data: {
+                        ...noveltyPageData.data,
+                        body: [...result[keyInter]],
+                        menuRef: { ...result[keyInter][0].menuRef },
+
+                    }
+                };
+                objectAll.push(newDaTForPageNovelty);
+            });
+        }
+    });
+
+
+    const arr = {
+        arr: [summaryData, ...objectAll],
+        group: groupedItems,
+        delay: delay
+    }
+    console.log(arr)
+    return arr
 }
