@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import { updatePageInDocument, setImgPageInDocument } from '../../../lib/fetching/documents';
 import LayautPages from '../compound_pages/layautPages';
@@ -11,11 +11,17 @@ import PageForImage from '../PageForImage';
 import HeaderPage from './headerCompound';
 import FooterPage from './footerCompound';
 
-export default function CompoundPageTouch({ styles, data, updateDataProp, deletePage, dataId }){
+export default function CompoundPageTouch({ styles, data, updateDataProp, deletePage, dataId }) {
 
-    
-    const [ dataListTouchState, setDataListTouchState ] = useState({...data});
-    
+
+    const [dataListTouchState, setDataListTouchState] = useState(null);
+
+
+
+    useEffect(() => {
+        if (!dataListTouchState) setDataListTouchState(data);
+    }, [data])
+
 
 
     const uddateBodyData = useCallback(body => {
@@ -25,39 +31,39 @@ export default function CompoundPageTouch({ styles, data, updateDataProp, delete
                 setDataListTouchState(dataForUpdate);
             })
             .catch(error => console.log(error));
-        
+
     }, [data, dataListTouchState]);
 
 
 
     const saveImg = useCallback((file, index) => {
-        setImgPageInDocument(data._id, {file, index})
-        .then(response => {
-            setDataListTouchState(response.data.data);
-        })
-        .catch(error => console.log(error));
-    }, [ data, dataListTouchState ]);
-    
+        setImgPageInDocument(data._id, { file, index })
+            .then(response => {
+                setDataListTouchState(response.data.data);
+            })
+            .catch(error => console.log(error));
+    }, [data, dataListTouchState]);
 
 
+    if (!dataListTouchState) return null;
 
 
-    return(
+    return (
         <LayautPages dataId={dataId}>
             <HeaderPage deletePage={() => deletePage(null, data._id)} dataId={dataId}>
-                <InputPasteEventReusable  
+                <InputPasteEventReusable
                     name={data.name_establishment}
-                    setData={dataTable => uddateBodyData({ body: dataTable.parser})}
+                    setData={dataTable => uddateBodyData({ body: dataTable.parser })}
                     value='toques aquí'
                 />
-                
+
             </HeaderPage>
-                <PageTouchTable styles={styles} setData={uddateBodyData} dataList={dataListTouchState?.data} saveImgProp={saveImg} />
+            <PageTouchTable styles={styles} setData={uddateBodyData} dataList={dataListTouchState?.data} saveImgProp={saveImg} />
             {
                 dataListTouchState?.data?.body?.length > 3 ?
-                <PageForImage styles={styles} data={dataListTouchState} setData={uddateBodyData} saveImgProp={saveImg} />
-                : 
-                null
+                    <PageForImage styles={styles} data={dataListTouchState} setData={uddateBodyData} saveImgProp={saveImg} />
+                    :
+                    null
             }
             <FooterPage />
         </LayautPages>
