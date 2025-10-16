@@ -105,10 +105,6 @@ export default function CompoundPageNovelty({ menus, data, updateDataProp, style
             if (!newNovelty.imageUrl[indexImg]) newNovelty.imageUrl[indexImg] = { url: null, caption: caption ?? null };
 
 
-            console.log(newNovelty.imageUrl[indexImg]);
-
-
-
             if (typeof file === 'string') {
                 newNovelty.imageUrl[indexImg].url = file;
             }
@@ -226,52 +222,53 @@ export default function CompoundPageNovelty({ menus, data, updateDataProp, style
                                 <div className='flex flex-row justify-center items-centerSASD p-4 gap-[.5rem] w-full h-full'>
                                     <div className='w-[55%] h-full flex flex-col gap-[.5rem] items-center justify-center'>
                                         {
-                                            menuSeletedState?.photos?.caption?.map((item, index, arr) => (
-                                                <>
-                                                    {
-                                                        data.jarvisNewsHydration === true && data?.imageUrl[index] === undefined ?
-                                                            null
-                                                            :
-                                                            <Image
-                                                                item={item}
-                                                                count={arr.length}
-                                                                caption={menuSeletedState?.photos?.caption.length > 1 ? (data?.imageUrl[index] ? data?.imageUrl[index].caption : menuSeletedState?.photos?.caption[index].es) : null}
-                                                                full={true}
-                                                                styles={styles}
-                                                                layautDouble={true}
-                                                                setSrc={Array.isArray(data?.imageUrl) && data?.imageUrl[index] !== undefined && data?.imageUrl.length > 0 ? (data?.imageUrl[index] && data?.imageUrl[index].url ? tranUrlToLocal(data?.imageUrl[index].url) : null) : null}
-                                                                getFile={(file) => {
-                                                                    const dataNew = !data?.imageUrl[index] ? menuSeletedState?.photos?.caption[index].es : data?.imageUrl[index].caption;
-                                                                    saveImg(file, data._id, index, dataNew);
-                                                                }}
-                                                                arrowCordernate={true}
-                                                                setCoordinates={data?.coordinates && Array.isArray(data?.coordinates) ? data?.coordinates[index] : null}
-                                                                saveCordenate={coordinates => {
-                                                                    const newData = {};
-                                                                    if (!data.coordinates) newData.coordinates = [];
-                                                                    else newData.coordinates = [...data.coordinates];
-                                                                    newData.coordinates[index] = coordinates;
-                                                                    updateBody(data._id, newData);
-                                                                }
-                                                                }
-                                                                key={index}
-                                                                updateCaption={(text) => {
-                                                                    saveImg(data?.imageUrl[index] && data?.imageUrl[index].url, data._id, index, text);
-                                                                }}
-                                                            />
-                                                    }
-                                                </>
-                                            ))
+                                            menuSeletedState?.photos?.caption?.map((item, index, arr) => {
+
+                                                if (data.jarvisNewsHydration === true && data?.imageUrl[index] === undefined) return null;
+
+                                                return (
+
+                                                    <Image
+                                                        item={item}
+                                                        count={arr.length}
+                                                        caption={menuSeletedState?.photos?.caption.length > 1 ? (data?.imageUrl[index] ? data?.imageUrl[index].caption : menuSeletedState?.photos?.caption[index].es) : null}
+                                                        full={true}
+                                                        styles={styles}
+                                                        layautDouble={true}
+                                                        setSrc={Array.isArray(data?.imageUrl) && data?.imageUrl[index] !== undefined && data?.imageUrl.length > 0 ? (data?.imageUrl[index] && data?.imageUrl[index].url ? tranUrlToLocal(data?.imageUrl[index].url) : null) : null}
+                                                        getFile={(file) => {
+                                                            const dataNew = !data?.imageUrl[index] ? menuSeletedState?.photos?.caption[index].es : data?.imageUrl[index].caption;
+                                                            saveImg(file, data._id, index, dataNew);
+                                                        }}
+                                                        arrowCordernate={true}
+                                                        setCoordinates={data?.coordinates && Array.isArray(data?.coordinates) ? data?.coordinates[index] : null}
+                                                        saveCordenate={coordinates => {
+                                                            const newData = {};
+                                                            if (!data.coordinates) newData.coordinates = [];
+                                                            else newData.coordinates = [...data.coordinates];
+                                                            newData.coordinates[index] = coordinates;
+                                                            updateBody(data._id, newData);
+                                                        }
+                                                        }
+                                                        key={index}
+                                                        updateCaption={(text) => {
+                                                            saveImg(data?.imageUrl[index] && data?.imageUrl[index].url, data._id, index, text);
+                                                        }}
+                                                    />
+
+                                                )
+                                            })
                                         }
                                     </div>
 
                                     <div className='h-full w-[45%] flex items-center justify-center flex-col items-center gap-[.5rem]'>
                                         <Title title={data?.title} styles={styles} getValue={(text) => updateBody(data._id, { title: text })} />
+
                                         {
                                             menuSeletedState?.time ?
                                                 <BoxTextEvent
                                                     label={'Duración'}
-                                                    value={data?.timeTotal ?? data?.timePeriod ? TimeOperator.calculateTime(data.timePeriod.init, data.timePeriod.end) : '00:00:00'}
+                                                    value={data?.timeTotal ?? (data?.timePeriod ? TimeOperator.calculateTime(data.timePeriod?.init, data.timePeriod?.end) : '00:00:00')}
                                                     styles={styles}
                                                     getValue={value => updateBody(data._id, { timeTotal: value })}
                                                 />
@@ -359,12 +356,7 @@ export default function CompoundPageNovelty({ menus, data, updateDataProp, style
                                     menuSeletedState?.time ?
                                         <BoxTextEvent
                                             label={'Duración'}
-                                            value={data?.timeTotal
-                                                ?? (
-                                                    data?.timePeriod
-                                                        ? TimeOperator.calculateTime(data.timePeriod.init, data.timePeriod.end)
-                                                        : '00:00:00'
-                                                )}
+                                            value={data?.timeTotal ?? (data?.timePeriod ? TimeOperator.calculateTime(data.timePeriod.init, data.timePeriod.end) : '00:00:00')}
                                             styles={styles}
                                             getValue={value =>
                                                 updateBody(data._id, { timeTotal: value })
