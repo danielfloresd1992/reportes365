@@ -129,6 +129,7 @@ export default function Services({ delay_data, dishItem, styles, editCell, }) {
                                         editCell={(data) => { updateCell(data) }}
                                         captioInit={captioInit}
                                         captioEnd={captioEnd}
+                                        deleteCell={deleteCell}
                                     />
                                     :
                                     null

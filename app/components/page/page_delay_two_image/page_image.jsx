@@ -14,7 +14,8 @@ export default function PageDelayTwoImage({
     data,
     captioInit,
     captioEnd,
-    editCell
+    editCell,
+    deleteCell
 }) {
 
 
@@ -34,6 +35,8 @@ export default function PageDelayTwoImage({
 
 
 
+
+
     const saveCoordinate = (coordinates, index) => {
         const newBoy = { ...data };
         if (!Array.isArray(newBoy?.coordinates)) newBoy.coordinates = [];
@@ -47,9 +50,17 @@ export default function PageDelayTwoImage({
         <LayautNovelty
             styles={styles}
             heigthAuto={false}
+
             namePage={''}
             getElementLayaut={(element) => {
                 element.current.style.height = '300px';
+            }}
+            onSwipeRight={{
+                callbackDelete: () => {
+
+                    deleteCell(data);
+                },
+                deleteOnSwipe: true
             }}
 
         >
