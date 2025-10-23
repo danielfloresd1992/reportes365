@@ -96,7 +96,7 @@ export default function Services({ delay_data, dishItem, styles, editCell, }) {
                     const titleForTable = dish.requiresTableNumber ?
                         `${delatTypeOfDish.length > 1 ? 'Mesas' : 'Mesa'} con demora superior a ${TimeOperator.timePeriod(dish?.timeLimit?.day ?? '00:00:00')} para recibir servicio de ${dish.nameDishe}`
                         :
-                        `demora superior a ${TimeOperator.timePeriod(dish?.timeLimit?.day ?? '00:00:00')} para recibir servicio de ${dish.nameDishe}`;
+                        `Demora superior a ${TimeOperator.timePeriod(dish?.timeLimit?.day ?? '00:00:00')} para recibir servicio de ${dish.nameDishe}`;
 
 
                     return (
